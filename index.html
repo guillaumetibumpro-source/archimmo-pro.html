@@ -2,27 +2,32 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArchImmo Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
+<title>ArchImmo Pro — Suite Immobilière & Architecturale</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter','Segoe UI',sans-serif; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,'Inter','Segoe UI',sans-serif; -webkit-tap-highlight-color:transparent; }
   :root {
     --bg:#0a0e1a; --sidebar:#0f1626; --card:#151d2e; --card2:#1a2438;
     --border:#243044; --text:#e8edf5; --muted:#8896ab;
     --immo:#3b82f6; --immo-light:#60a5fa; --arch:#ec4899; --arch-light:#f472b6;
     --success:#10b981; --warning:#f59e0b; --danger:#ef4444;
   }
+  html, body { height:100%; overflow:hidden; }
   body { background:var(--bg); color:var(--text); display:flex; min-height:100vh; }
 
+  /* ============ SIDEBAR ============ */
   .sidebar {
     width:280px; background:var(--sidebar); display:flex; flex-direction:column;
-    border-right:1px solid var(--border); height:100vh; overflow-y:auto; flex-shrink:0;
+    border-right:1px solid var(--border); height:100vh; overflow-y:auto;
+    flex-shrink:0; transition:transform .3s;
   }
-  .sidebar::-webkit-scrollbar { width:6px; }
+  .sidebar::-webkit-scrollbar { width:5px; }
   .sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
   .logo {
-    padding:22px 20px; font-size:20px; font-weight:800; letter-spacing:-.5px;
+    padding:20px; font-size:19px; font-weight:800; letter-spacing:-.5px;
     border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;
   }
   .logo-icon {
@@ -35,94 +40,77 @@
     -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   }
 
-  .switcher {
-    display:flex; margin:14px; padding:4px; background:var(--bg);
-    border-radius:10px; border:1px solid var(--border);
-  }
-  .switch-btn {
-    flex:1; padding:9px; text-align:center; border-radius:7px; cursor:pointer;
-    font-size:12px; font-weight:600; transition:.2s; color:var(--muted);
-  }
+  .switcher { display:flex; margin:12px; padding:4px; background:var(--bg);
+    border-radius:10px; border:1px solid var(--border); }
+  .switch-btn { flex:1; padding:9px; text-align:center; border-radius:7px;
+    cursor:pointer; font-size:12px; font-weight:600; transition:.2s; color:var(--muted); }
   .switch-btn.active.immo { background:var(--immo); color:#fff; }
   .switch-btn.active.arch { background:var(--arch); color:#fff; }
 
   .menu-section { padding:6px 12px 4px; font-size:10px; color:var(--muted);
-    text-transform:uppercase; letter-spacing:1.2px; font-weight:700; margin-top:10px; }
-  .nav-item {
-    padding:10px 14px; margin:2px 8px; border-radius:8px; cursor:pointer;
-    font-size:13.5px; color:#c4cede; display:flex; align-items:center;
-    gap:10px; transition:.15s; position:relative;
-  }
+    text-transform:uppercase; letter-spacing:1.2px; font-weight:700; margin-top:8px; }
+  .nav-item { padding:10px 14px; margin:2px 8px; border-radius:8px; cursor:pointer;
+    font-size:13px; color:#c4cede; display:flex; align-items:center;
+    gap:10px; transition:.15s; position:relative; }
   .nav-item:hover { background:var(--card); color:#fff; }
   .nav-item.active { background:linear-gradient(90deg,rgba(59,130,246,.15),rgba(236,72,153,.08)); color:#fff; font-weight:600; }
-  .nav-item.active::before {
-    content:''; position:absolute; left:0; top:20%; height:60%; width:3px;
-    background:var(--immo); border-radius:0 3px 3px 0;
-  }
+  .nav-item.active::before { content:''; position:absolute; left:0; top:20%; height:60%; width:3px;
+    background:var(--immo); border-radius:0 3px 3px 0; }
   body.arch-mode .nav-item.active::before { background:var(--arch); }
   .nav-item .icon { width:18px; text-align:center; }
-  .nav-item .badge {
-    margin-left:auto; background:var(--danger); color:#fff; font-size:10px;
-    padding:2px 6px; border-radius:8px; font-weight:700;
-  }
+  .nav-item .badge { margin-left:auto; background:var(--danger); color:#fff;
+    font-size:10px; padding:2px 6px; border-radius:8px; font-weight:700; }
   .nav-item .badge.blue { background:var(--immo); }
   .nav-item .badge.pink { background:var(--arch); }
 
+  /* ============ MAIN ============ */
   .main { flex:1; display:flex; flex-direction:column; height:100vh; overflow:hidden; min-width:0; }
-  .topbar {
-    height:64px; border-bottom:1px solid var(--border); display:flex;
-    align-items:center; padding:0 24px; gap:16px; background:var(--sidebar);
-    flex-shrink:0;
-  }
-  .search {
-    flex:1; max-width:420px; background:var(--bg); border:1px solid var(--border);
-    border-radius:9px; padding:9px 14px; color:var(--text); font-size:13px;
-    outline:none;
-  }
+  .topbar { height:60px; border-bottom:1px solid var(--border); display:flex;
+    align-items:center; padding:0 16px; gap:10px; background:var(--sidebar); flex-shrink:0; }
+  .menu-toggle { display:none; width:38px; height:38px; border-radius:9px;
+    background:var(--card); border:1px solid var(--border); cursor:pointer;
+    font-size:18px; color:var(--text); }
+  .search { flex:1; max-width:420px; background:var(--bg); border:1px solid var(--border);
+    border-radius:9px; padding:9px 14px; color:var(--text); font-size:13px; outline:none; }
   .search::placeholder { color:var(--muted); }
-  .topbar-actions { margin-left:auto; display:flex; gap:10px; align-items:center; }
-  .icon-btn {
-    width:38px; height:38px; border-radius:9px; background:var(--card);
+  .topbar-actions { margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .icon-btn { width:38px; height:38px; border-radius:9px; background:var(--card);
     border:1px solid var(--border); display:flex; align-items:center;
-    justify-content:center; cursor:pointer; position:relative; font-size:16px;
-    transition:.15s;
-  }
+    justify-content:center; cursor:pointer; position:relative; font-size:16px; }
   .icon-btn:hover { background:var(--card2); }
-  .icon-btn .dot {
-    position:absolute; top:8px; right:8px; width:8px; height:8px;
-    background:var(--danger); border-radius:50%; border:2px solid var(--sidebar);
-  }
-  .avatar {
-    width:38px; height:38px; border-radius:50%;
+  .icon-btn .dot { position:absolute; top:8px; right:8px; width:8px; height:8px;
+    background:var(--danger); border-radius:50%; border:2px solid var(--sidebar); }
+  .avatar { width:38px; height:38px; border-radius:50%;
     background:linear-gradient(135deg,var(--immo),var(--arch));
     display:flex; align-items:center; justify-content:center; font-weight:700;
-    font-size:14px; cursor:pointer;
-  }
+    font-size:13px; cursor:pointer; }
 
-  .content { flex:1; overflow-y:auto; padding:26px; }
-  .content::-webkit-scrollbar { width:8px; }
+  /* ============ CONTENT ============ */
+  .content { flex:1; overflow-y:auto; padding:22px; -webkit-overflow-scrolling:touch; }
+  .content::-webkit-scrollbar { width:6px; }
   .content::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
 
-  .page-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px; }
-  .page-head h1 { font-size:24px; font-weight:700; }
+  .page-head { display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .page-head h1 { font-size:22px; font-weight:700; }
   .page-head p { color:var(--muted); font-size:13px; margin-top:4px; }
-  .btn {
-    border:none; padding:10px 18px; border-radius:9px; font-weight:600;
+  .page-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .btn { border:none; padding:10px 16px; border-radius:9px; font-weight:600;
     font-size:13px; cursor:pointer; transition:.15s; display:inline-flex;
-    align-items:center; gap:7px;
-  }
+    align-items:center; gap:6px; }
   .btn-primary { background:var(--immo); color:#fff; }
   .btn-primary:hover { background:var(--immo-light); }
   body.arch-mode .btn-primary { background:var(--arch); }
   body.arch-mode .btn-primary:hover { background:var(--arch-light); }
   .btn-ghost { background:var(--card); color:var(--text); border:1px solid var(--border); }
   .btn-ghost:hover { background:var(--card2); }
+  .btn-danger { background:var(--danger); color:#fff; }
+  .btn-success { background:var(--success); color:#fff; }
+  .btn-sm { padding:6px 10px; font-size:11.5px; }
 
-  .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:24px; }
-  .stat-card {
-    background:var(--card); border:1px solid var(--border); border-radius:14px;
-    padding:18px; transition:.2s;
-  }
+  .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:18px; transition:.2s; }
   .stat-card:hover { transform:translateY(-2px); border-color:var(--immo); }
   body.arch-mode .stat-card:hover { border-color:var(--arch); }
   .stat-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:600; }
@@ -130,31 +118,30 @@
   .stat-sub { font-size:11.5px; color:var(--success); font-weight:600; }
   .stat-sub.neg { color:var(--danger); }
 
-  .panel {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:14px; padding:22px; margin-bottom:20px;
-  }
-  .panel h2 { font-size:16px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
-  .panel h2 .count { background:var(--bg); color:var(--muted); font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
+  .panel { background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:20px; margin-bottom:16px; }
+  .panel h2 { font-size:15px; font-weight:700; margin-bottom:14px;
+    display:flex; align-items:center; gap:8px; }
+  .panel h2 .count { background:var(--bg); color:var(--muted); font-size:11px;
+    padding:2px 8px; border-radius:10px; font-weight:600; }
 
-  .list-item {
-    display:flex; align-items:center; gap:14px; padding:13px 14px;
+  .list-item { display:flex; align-items:center; gap:12px; padding:12px 14px;
     background:var(--card2); border-radius:10px; margin-bottom:8px;
-    border-left:3px solid var(--immo); transition:.15s; cursor:pointer;
-  }
+    border-left:3px solid var(--immo); transition:.15s; cursor:pointer; }
   body.arch-mode .list-item { border-left-color:var(--arch); }
-  .list-item:hover { background:#1f2b41; }
-  .list-icon {
-    width:40px; height:40px; border-radius:9px; background:var(--bg);
-    display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
-  }
+  .list-item:hover { background:#1f2b41; transform:translateX(2px); }
+  .list-icon { width:38px; height:38px; border-radius:9px; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
   .list-info { flex:1; min-width:0; }
   .list-info strong { display:block; font-size:13.5px; margin-bottom:3px; }
   .list-info small { color:var(--muted); font-size:11.5px; }
-  .tag {
-    padding:4px 10px; border-radius:7px; font-size:10.5px; font-weight:700;
-    text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;
-  }
+  .list-actions { display:flex; gap:4px; }
+  .list-actions button { width:30px; height:30px; border-radius:7px;
+    background:var(--bg); border:1px solid var(--border); color:var(--text);
+    cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; }
+  .list-actions button:hover { background:var(--card2); }
+  .tag { padding:4px 10px; border-radius:7px; font-size:10.5px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; }
   .tag.blue { background:rgba(59,130,246,.15); color:var(--immo-light); }
   .tag.pink { background:rgba(236,72,153,.15); color:var(--arch-light); }
   .tag.green { background:rgba(16,185,129,.15); color:#34d399; }
@@ -162,79 +149,81 @@
   .tag.red { background:rgba(239,68,68,.15); color:#f87171; }
   .tag.purple { background:rgba(168,85,247,.15); color:#c084fc; }
 
-  .tool-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
-  .tool-card {
-    background:var(--card2); border:1px solid var(--border); border-radius:12px;
-    padding:16px; cursor:pointer; transition:.2s; text-align:center;
-  }
+  .tool-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+  .tool-card { background:var(--card2); border:1px solid var(--border); border-radius:12px;
+    padding:16px; cursor:pointer; transition:.2s; text-align:center; }
   .tool-card:hover { border-color:var(--immo); transform:translateY(-2px); background:#1f2b41; }
   body.arch-mode .tool-card:hover { border-color:var(--arch); }
-  .tool-card .tool-icon { font-size:26px; margin-bottom:8px; }
+  .tool-card .tool-icon { font-size:24px; margin-bottom:8px; }
   .tool-card .tool-name { font-size:12.5px; font-weight:600; }
   .tool-card .tool-desc { font-size:10.5px; color:var(--muted); margin-top:4px; }
 
-  .toast-container {
-    position:fixed; top:20px; right:20px; z-index:9999;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .toast {
-    background:var(--card); border:1px solid var(--border);
-    padding:14px 18px; border-radius:11px; min-width:280px;
+  .empty { text-align:center; padding:40px 20px; color:var(--muted); }
+  .empty .empty-icon { font-size:48px; margin-bottom:12px; opacity:.5; }
+  .empty h3 { font-size:15px; margin-bottom:6px; color:var(--text); }
+  .empty p { font-size:12.5px; }
+
+  .toast-container { position:fixed; top:70px; right:16px; z-index:9999;
+    display:flex; flex-direction:column; gap:10px; max-width:340px; }
+  .toast { background:var(--card); border:1px solid var(--border);
+    padding:13px 16px; border-radius:11px; min-width:240px;
     box-shadow:0 10px 30px rgba(0,0,0,.4);
-    display:flex; align-items:center; gap:12px;
-    animation:slideIn .3s ease;
-  }
+    display:flex; align-items:center; gap:10px; animation:slideIn .3s ease; }
   @keyframes slideIn { from{transform:translateX(400px);opacity:0} to{transform:translateX(0);opacity:1} }
   .toast .toast-icon { font-size:20px; }
   .toast .toast-text strong { display:block; font-size:13px; margin-bottom:2px; }
   .toast .toast-text small { color:var(--muted); font-size:11.5px; }
 
-  .modal-overlay {
-    position:fixed; inset:0; background:rgba(5,8,15,.8);
+  .modal-overlay { position:fixed; inset:0; background:rgba(5,8,15,.85);
     display:none; align-items:center; justify-content:center;
-    z-index:1000; backdrop-filter:blur(4px); padding:16px;
-  }
+    z-index:1000; backdrop-filter:blur(4px); padding:16px; }
   .modal-overlay.show { display:flex; }
-  .modal {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:16px; padding:28px; width:100%; max-width:520px;
-    animation:popIn .25s ease;
-  }
+  .modal { background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:24px; width:100%; max-width:520px;
+    max-height:90vh; overflow-y:auto; animation:popIn .25s ease; }
   @keyframes popIn { from{transform:scale(.95);opacity:0} to{transform:scale(1);opacity:1} }
   .modal h3 { font-size:18px; margin-bottom:8px; }
-  .modal p { color:var(--muted); font-size:13px; margin-bottom:20px; }
-  .form-group { margin-bottom:14px; }
-  .form-group label { display:block; font-size:11.5px; color:var(--muted); margin-bottom:6px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+  .modal > p { color:var(--muted); font-size:13px; margin-bottom:18px; }
+  .form-group { margin-bottom:12px; }
+  .form-group label { display:block; font-size:11.5px; color:var(--muted);
+    margin-bottom:5px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
   .form-group input, .form-group select, .form-group textarea {
     width:100%; background:var(--bg); border:1px solid var(--border);
     border-radius:8px; padding:10px 12px; color:var(--text);
-    font-size:13px; outline:none; font-family:inherit;
-  }
+    font-size:13.5px; outline:none; font-family:inherit; }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    border-color:var(--immo);
-  }
+    border-color:var(--immo); }
   body.arch-mode .form-group input:focus, body.arch-mode .form-group select:focus, body.arch-mode .form-group textarea:focus {
-    border-color:var(--arch);
-  }
-  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+    border-color:var(--arch); }
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
 
   .hidden { display:none !important; }
-  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+
+  .overlay-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5);
+    z-index:99; }
+  .overlay-backdrop.show { display:block; }
 
   @media(max-width:900px){
-    body { flex-direction:column; }
-    .sidebar { width:100%; height:auto; max-height:50vh; }
-    .main { height:auto; min-height:50vh; }
+    .sidebar { position:fixed; left:0; top:0; z-index:100;
+      transform:translateX(-100%); box-shadow:4px 0 20px rgba(0,0,0,.5); }
+    .sidebar.open { transform:translateX(0); }
+    .menu-toggle { display:flex; align-items:center; justify-content:center; }
     .grid-2 { grid-template-columns:1fr; }
-    .search { max-width:100%; }
-    .topbar { padding:0 12px; }
-    .content { padding:16px; }
+    .content { padding:14px; }
+    .page-head h1 { font-size:19px; }
+    .stat-value { font-size:22px; }
+    .search { font-size:12.5px; padding:8px 12px; }
+    .topbar-actions .icon-btn:nth-child(1) { display:none; }
   }
 </style>
 </head>
 <body class="immo-mode">
 
-<aside class="sidebar">
+<div class="overlay-backdrop" id="backdrop" onclick="toggleSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
   <div class="logo">
     <div class="logo-icon">🏛️</div>
     <div>ArchImmo <span class="gradient">Pro</span></div>
@@ -250,12 +239,12 @@
 
 <div class="main">
   <div class="topbar">
-    <input class="search" placeholder="🔍 Rechercher...">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <input class="search" id="searchInput" placeholder="🔍 Rechercher..." oninput="handleSearch(this.value)">
     <div class="topbar-actions">
-      <div class="icon-btn" onclick="showToast('📅','Agenda','3 rendez-vous aujourd\'hui')">📅<span class="dot"></span></div>
-      <div class="icon-btn" onclick="showToast('💬','Messagerie','2 nouveaux messages')">💬<span class="dot"></span></div>
-      <div class="icon-btn" onclick="showToast('🔔','Notifications','5 notifications non lues')">🔔<span class="dot"></span></div>
-      <div class="avatar" onclick="showToast('👤','Profil','Marie Dupont — Administratrice')">MD</div>
+      <div class="icon-btn" onclick="loadDemo()" title="Charger données démo">🎬</div>
+      <div class="icon-btn" onclick="showNotifications()">🔔<span class="dot" id="notifDot"></span></div>
+      <div class="avatar" onclick="showProfile()">MD</div>
     </div>
   </div>
 
@@ -270,13 +259,116 @@
 
 <script>
 /* ============================================================
-   MENU IMMOBILIER
+   BASE DE DONNÉES (localStorage)
+   ============================================================ */
+var DB = {
+  biens: [],
+  clients: [],
+  projets: [],
+  chantiers: [],
+  taches: [],
+  agenda: [],
+  documents: [],
+  factures: [],
+  messages: [],
+  notifications: []
+};
+
+function saveDB() {
+  try { localStorage.setItem('archimmo_db', JSON.stringify(DB)); } catch(e) {}
+}
+function loadDB() {
+  try {
+    var saved = localStorage.getItem('archimmo_db');
+    if (saved) DB = JSON.parse(saved);
+  } catch(e) {}
+}
+
+function genId() { return Date.now() + Math.floor(Math.random()*1000); }
+
+/* ============================================================
+   DONNÉES DE DÉMO
+   ============================================================ */
+function seedDemo() {
+  DB.biens = [
+    {id:genId(), titre:'Appartement T3 — Lyon 6e', type:'Vente', prix:'420 000 €', surface:'72 m²', adresse:'12 rue Duquesne, 69006 Lyon', desc:'Appartement lumineux, 3 pièces, balcon.', statut:'Disponible'},
+    {id:genId(), titre:'Maison 5P — Écully', type:'Vente', prix:'680 000 €', surface:'145 m²', adresse:'5 chemin des Cerisiers, 69130 Écully', desc:'Maison familiale avec jardin 400 m².', statut:'Sous offre'},
+    {id:genId(), titre:'Studio meublé — Villeurbanne', type:'Location', prix:'650 €/mois', surface:'24 m²', adresse:'8 rue de la Paix, 69100 Villeurbanne', desc:'Studio refait à neuf, proche métro.', statut:'Loué'},
+    {id:genId(), titre:'Immeuble de rapport — Lyon 3e', type:'Vente', prix:'1 250 000 €', surface:'420 m²', adresse:'45 avenue Jean Jaurès, 69007 Lyon', desc:'Immeuble 6 lots, rentabilité 6,2%.', statut:'Disponible'},
+    {id:genId(), titre:'Duplex T4 — Caluire', type:'Vente', prix:'495 000 €', surface:'96 m²', adresse:'22 rue Pasteur, 69300 Caluire', desc:'Duplex avec terrasse, exposé sud.', statut:'Compromis'}
+  ];
+  DB.clients = [
+    {id:genId(), nom:'M. & Mme Martin', type:'Acheteur', email:'martin@email.fr', tel:'06 12 34 56 78', budget:'450 000 €', notes:'Cherche T3 sur Lyon 6e ou 3e.'},
+    {id:genId(), nom:'SCI Bellevue', type:'Investisseur', email:'contact@sci-bellevue.fr', tel:'04 78 12 34 56', budget:'1 500 000 €', notes:'Recherche immeubles de rapport.'},
+    {id:genId(), nom:'M. Bernard', type:'Vendeur', email:'bernard@email.fr', tel:'06 98 76 54 32', budget:'', notes:'Souhaite vendre maison Villeurbanne.'}
+  ];
+  DB.projets = [
+    {id:genId(), titre:'Villa contemporaine — Annecy', client:'Famille Rousseau', surface:'210 m²', budget:'680 000 €', statut:'Permis déposé', avancement:'45%'},
+    {id:genId(), titre:'Rénovation Loft — Lyon 1er', client:'M. Petit', surface:'95 m²', budget:'342 000 €', statut:'Chantier', avancement:'65%'},
+    {id:genId(), titre:'Maison passive — Grenoble', client:'M. & Mme Blanc', surface:'160 m²', budget:'420 000 €', statut:'Conception', avancement:'25%'},
+    {id:genId(), titre:'Extension — Bordeaux', client:'M. Leroy', surface:'45 m²', budget:'95 000 €', statut:'Esquisse', avancement:'15%'}
+  ];
+  DB.chantiers = [
+    {id:genId(), titre:'Loft Lyon 1er', client:'M. Petit', entreprise:'BTP Lyon SAS', avancement:'65%', budget:'342 000 €', fin:'30/04/2025', statut:'En cours'},
+    {id:genId(), titre:'Villa Annecy', client:'Famille Rousseau', entreprise:'—', avancement:'0%', budget:'680 000 €', fin:'15/09/2025', statut:'À démarrer'}
+  ];
+  DB.taches = [
+    {id:genId(), titre:'Rappeler M. Martin', desc:'Retour visite T3', date:'Aujourd\'hui', priorite:'Urgente', fait:false},
+    {id:genId(), titre:'Préparer mandat Petit', desc:'Appartement Lyon 1er', date:'Demain', priorite:'Normale', fait:false},
+    {id:genId(), titre:'Relancer notaire Durand', desc:'Compromis Villa Caluire', date:'Cette semaine', priorite:'Normale', fait:true}
+  ];
+  DB.agenda = [
+    {id:genId(), titre:'Visite T3 Lyon 6e', heure:'10h00', date:'Aujourd\'hui', avec:'M. & Mme Martin', lieu:'12 rue Duquesne Lyon'},
+    {id:genId(), titre:'Estimation Maison', heure:'14h00', date:'Aujourd\'hui', avec:'M. Bernard', lieu:'Villeurbanne'},
+    {id:genId(), titre:'Signature mandat', heure:'16h30', date:'Aujourd\'hui', avec:'M. Petit', lieu:'Agence'},
+    {id:genId(), titre:'Point équipe', heure:'18h00', date:'Aujourd\'hui', avec:'Équipe', lieu:'Visio'}
+  ];
+  DB.documents = [
+    {id:genId(), titre:'Mandat_Exclusif_T3_Lyon6.pdf', type:'Mandat', date:'12/03/2025', taille:'245 Ko'},
+    {id:genId(), titre:'Compromis_Villa_Caluire.pdf', type:'Compromis', date:'08/03/2025', taille:'412 Ko'},
+    {id:genId(), titre:'Diagnostic_DPE_T3.pdf', type:'Diagnostic', date:'05/03/2025', taille:'189 Ko'}
+  ];
+  DB.factures = [
+    {id:genId(), numero:'2025-0142', client:'SCI Bellevue', montant:'8 400 €', statut:'Payée', date:'01/03/2025'},
+    {id:genId(), numero:'2025-0143', client:'M. Martin', montant:'4 200 €', statut:'En attente', date:'15/03/2025'},
+    {id:genId(), numero:'2025-0144', client:'M. Petit', montant:'2 800 €', statut:'En attente', date:'20/03/2025'}
+  ];
+  DB.messages = [
+    {id:genId(), de:'M. Martin', texte:'Bonjour, est-il possible de visiter le T3 samedi ?', date:'10:24', lu:false},
+    {id:genId(), de:'Cabinet BTP Lyon', texte:'Devis révisé envoyé ce matin.', date:'09:12', lu:false}
+  ];
+  DB.notifications = [
+    {id:genId(), icon:'🤝', titre:'Nouvelle offre reçue', desc:'Maison Écully · 380 000 €', date:'Il y a 5 min', lu:false},
+    {id:genId(), icon:'📧', titre:'Email de M. Martin', desc:'Demande visite T3', date:'Il y a 30 min', lu:false},
+    {id:genId(), icon:'📅', titre:'Rappel rendez-vous', desc:'Dans 30 min — Visite Lyon 6e', date:'Il y a 1h', lu:true}
+  ];
+  saveDB();
+}
+
+function clearAllData() {
+  if (!confirm('⚠️ Effacer TOUTES les données ? Cette action est irréversible.')) return;
+  DB = { biens:[], clients:[], projets:[], chantiers:[], taches:[], agenda:[], documents:[], factures:[], messages:[], notifications:[] };
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Données effacées', 'Toutes les données ont été supprimées');
+}
+
+function loadDemo() {
+  if (!confirm('🎬 Charger les données de démonstration ? Cela va remplacer vos données actuelles.')) return;
+  seedDemo();
+  renderPage(currentPage);
+  renderMenu();
+  showToast('🎬', 'Démo chargée', 'Toutes les données ont été injectées');
+}
+
+/* ============================================================
+   MENUS
    ============================================================ */
 var MENU_IMMO = [
   { section:'Principal' },
   { id:'immo-dashboard', icon:'📊', label:'Tableau de bord' },
-  { id:'immo-agenda', icon:'📅', label:'Agenda & Rendez-vous', badge:'3', badgeClass:'blue' },
-  { id:'immo-messagerie', icon:'💬', label:'Messagerie', badge:'2', badgeClass:'blue' },
+  { id:'immo-agenda', icon:'📅', label:'Agenda & Rendez-vous' },
+  { id:'immo-messagerie', icon:'💬', label:'Messagerie' },
 
   { section:'Gestion Immobilière' },
   { id:'immo-biens', icon:'🏠', label:'Biens immobiliers' },
@@ -286,12 +378,9 @@ var MENU_IMMO = [
   { id:'immo-offres', icon:'🤝', label:'Offres & Négociations' },
   { id:'immo-compromis', icon:'✍️', label:'Compromis & Actes' },
   { id:'immo-locations', icon:'🔑', label:'Locations & Baux' },
-  { id:'immo-gestion', icon:'🏘️', label:'Gestion locative' },
 
   { section:'CRM & Clients' },
   { id:'immo-clients', icon:'👥', label:'Clients & Prospects' },
-  { id:'immo-vendeurs', icon:'📤', label:'Vendeurs & Mandants' },
-  { id:'immo-acheteurs', icon:'📥', label:'Acheteurs & Recherches' },
   { id:'immo-matching', icon:'🎯', label:'Matching automatique' },
   { id:'immo-relances', icon:'⏰', label:'Relances & Suivi' },
 
@@ -303,7 +392,7 @@ var MENU_IMMO = [
   { id:'immo-honoraires', icon:'💵', label:'Honoraires & Commissions' },
   { id:'immo-calculatrice', icon:'🔢', label:'Simulateur prêt & fiscalité' },
 
-  { section:'Documents & Administration' },
+  { section:'Documents & Admin' },
   { id:'immo-docs', icon:'📄', label:'Documents & Contrats' },
   { id:'immo-signature', icon:'✒️', label:'Signature électronique' },
   { id:'immo-conformite', icon:'🛡️', label:'Conformité & RGPD' },
@@ -313,15 +402,14 @@ var MENU_IMMO = [
   { id:'immo-finance', icon:'💰', label:'Comptabilité & Factures' },
   { id:'immo-analytics', icon:'📈', label:'Statistiques & KPIs' },
   { id:'immo-marche', icon:'🌍', label:'Analyse de marché' },
-  { id:'immo-objectifs', icon:'🎯', label:'Objectifs & Performance' },
 
-  { section:'Communication & Marketing' },
+  { section:'Communication' },
   { id:'immo-marketing', icon:'📣', label:'Campagnes marketing' },
   { id:'immo-siteweb', icon:'🌐', label:'Site web & Portails' },
   { id:'immo-reseaux', icon:'📱', label:'Réseaux sociaux' },
   { id:'immo-emailing', icon:'✉️', label:'Emailing & Newsletter' },
 
-  { section:'Collaboration & Équipe' },
+  { section:'Collaboration' },
   { id:'immo-equipe', icon:'🧑‍💼', label:'Équipe & Rôles' },
   { id:'immo-taches', icon:'✅', label:'Tâches & Projets' },
   { id:'immo-notifications', icon:'🔔', label:'Notifications & Alertes' },
@@ -332,14 +420,11 @@ var MENU_IMMO = [
   { id:'immo-aide', icon:'❓', label:'Aide & Support' }
 ];
 
-/* ============================================================
-   MENU ARCHITECTE
-   ============================================================ */
 var MENU_ARCH = [
   { section:'Principal' },
   { id:'arch-dashboard', icon:'📊', label:'Tableau de bord' },
-  { id:'arch-agenda', icon:'📅', label:'Agenda & Chantiers', badge:'4', badgeClass:'pink' },
-  { id:'arch-messagerie', icon:'💬', label:'Messagerie', badge:'1', badgeClass:'pink' },
+  { id:'arch-agenda', icon:'📅', label:'Agenda & Chantiers' },
+  { id:'arch-messagerie', icon:'💬', label:'Messagerie' },
 
   { section:'Conception & Projets' },
   { id:'arch-projets', icon:'📐', label:'Projets & Dossiers' },
@@ -351,7 +436,7 @@ var MENU_ARCH = [
   { id:'arch-thermique', icon:'🌡️', label:'Études thermiques (RE2020)' },
   { id:'arch-structure', icon:'🏗️', label:'Structure & Béton armé' },
 
-  { section:'Administratif & Réglementaire' },
+  { section:'Administratif' },
   { id:'arch-permis', icon:'📋', label:'Permis de construire' },
   { id:'arch-declarations', icon:'📑', label:'Déclarations préalables' },
   { id:'arch-urbanisme', icon:'🏛️', label:'Urbanisme & PLU' },
@@ -368,10 +453,10 @@ var MENU_ARCH = [
   { id:'arch-receptions', icon:'✅', label:'Réceptions & Réserves' },
   { id:'arch-opr', icon:'🔍', label:'OPR & Levée de réserves' },
 
-  { section:'CRM & Clients Architecte' },
+  { section:'CRM' },
   { id:'arch-clients', icon:'👥', label:'Maîtres d\'ouvrage' },
   { id:'arch-prospects', icon:'🎯', label:'Prospects & Pistes' },
-  { id:'arch-partenaires', icon:'🤝', label:'Partenaires & Bureaux d\'études' },
+  { id:'arch-partenaires', icon:'🤝', label:'Partenaires & BE' },
   { id:'arch-relances', icon:'⏰', label:'Relances & Suivi' },
 
   { section:'Outils Métier' },
@@ -382,9 +467,9 @@ var MENU_ARCH = [
   { id:'arch-photos', icon:'📸', label:'Photos chantier & drone' },
   { id:'arch-signature', icon:'✒️', label:'Signature électronique' },
 
-  { section:'Documents & Administration' },
+  { section:'Documents & Admin' },
   { id:'arch-docs', icon:'📄', label:'Documents & Contrats' },
-  { id:'arch-contrats', icon:'📜', label:'Contrats de maîtrise d\'œuvre' },
+  { id:'arch-contrats', icon:'📜', label:'Contrats maîtrise d\'œuvre' },
   { id:'arch-assurances', icon:'🛡️', label:'Assurances & Décennale' },
   { id:'arch-archives', icon:'🗄️', label:'Archives projets' },
 
@@ -394,13 +479,13 @@ var MENU_ARCH = [
   { id:'arch-analytics', icon:'📊', label:'Statistiques & KPIs' },
   { id:'arch-temps', icon:'⏱️', label:'Suivi du temps' },
 
-  { section:'Communication & Marketing' },
+  { section:'Communication' },
   { id:'arch-portfolio', icon:'🎨', label:'Portfolio & Réalisations' },
   { id:'arch-siteweb', icon:'🌐', label:'Site web & Vitrine' },
   { id:'arch-reseaux', icon:'📱', label:'Réseaux sociaux' },
   { id:'arch-emailing', icon:'✉️', label:'Emailing & Newsletter' },
 
-  { section:'Collaboration & Équipe' },
+  { section:'Collaboration' },
   { id:'arch-equipe', icon:'🧑‍💼', label:'Équipe & Rôles' },
   { id:'arch-taches', icon:'✅', label:'Tâches & Projets' },
   { id:'arch-notifications', icon:'🔔', label:'Notifications & Alertes' },
@@ -412,1487 +497,14 @@ var MENU_ARCH = [
 ];
 
 /* ============================================================
-   CONFIGURATION DES PAGES
-   ============================================================ */
-var PAGES = {
-  'immo-biens': {
-    title:'🏠 Biens immobiliers',
-    subtitle:'Catalogue complet de vos biens en vente et location',
-    stats:[
-      {label:'Total',value:'142',sub:'+12 ce mois'},
-      {label:'Ventes',value:'86',sub:'+7'},
-      {label:'Locations',value:'56',sub:'+5'},
-      {label:'Exclusivités',value:'34',sub:'+3'}
-    ],
-    items:[
-      {icon:'🏠',title:'Appartement T3 — Lyon 6e',sub:'72 m² · 420 000 € · Mandat exclusif',tag:'Vente',tagClass:'blue'},
-      {icon:'🏡',title:'Maison 5P — Écully',sub:'145 m² · 680 000 € · Offre en cours',tag:'Négociation',tagClass:'orange'},
-      {icon:'🏢',title:'Studio meublé — Villeurbanne',sub:'24 m² · 650 €/mois',tag:'Location',tagClass:'green'},
-      {icon:'🏘️',title:'Immeuble de rapport — Lyon 3e',sub:'420 m² · 1 250 000 €',tag:'Vente',tagClass:'blue'},
-      {icon:'🏠',title:'Duplex T4 — Caluire',sub:'96 m² · 495 000 €',tag:'Compromis',tagClass:'purple'}
-    ],
-    tools:[
-      {icon:'➕',name:'Ajouter un bien',desc:'Nouveau dossier'},
-      {icon:'📸',name:'Photos & médias',desc:'Galerie, 360°'},
-      {icon:'🎬',name:'Visite virtuelle',desc:'Matterport'},
-      {icon:'📢',name:'Diffuser',desc:'Portails & réseaux'},
-      {icon:'📄',name:'Fiche bien',desc:'PDF commercial'},
-      {icon:'🧮',name:'Estimer',desc:'Prix de marché'},
-      {icon:'🗺️',name:'Localisation',desc:'Carte & quartier'},
-      {icon:'📊',name:'Performance',desc:'Vues & contacts'}
-    ]
-  },
-  'immo-mandats': {
-    title:'📜 Mandats & Exclusivités',
-    subtitle:'Gestion de tous vos mandats de vente et location',
-    stats:[
-      {label:'Mandats actifs',value:'68',sub:'+4'},
-      {label:'Exclusivités',value:'34',sub:'+3'},
-      {label:'Simples',value:'34',sub:'+1'},
-      {label:'Expirent bientôt',value:'7',sub:'À relancer',neg:true}
-    ],
-    items:[
-      {icon:'✍️',title:'Mandat exclusif — T3 Lyon 6e',sub:'Signé le 12/03 · Expire 12/06',tag:'Exclusif',tagClass:'blue'},
-      {icon:'📄',title:'Mandat simple — Maison Écully',sub:'Signé le 05/03 · Expire 05/09',tag:'Simple',tagClass:'green'},
-      {icon:'⏰',title:'Mandat à renouveler — Studio',sub:'Expire dans 15 jours',tag:'Urgent',tagClass:'red'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau mandat'},
-      {icon:'✒️',name:'Signature électronique'},
-      {icon:'🔔',name:'Alertes expiration'},
-      {icon:'📄',name:'Modèles de mandats'},
-      {icon:'📊',name:'Statistiques mandats'},
-      {icon:'🔄',name:'Renouvellements'}
-    ]
-  },
-  'immo-annonces': {
-    title:'📢 Annonces & Diffusion',
-    subtitle:'Diffusion multi-portails et suivi de performance',
-    stats:[
-      {label:'Annonces actives',value:'98',sub:'+6'},
-      {label:'Portails',value:'12',sub:'SeLoger, Leboncoin...'},
-      {label:'Vues totales',value:'24,8k',sub:'+18%'},
-      {label:'Contacts',value:'342',sub:'+42'}
-    ],
-    tools:[
-      {icon:'📤',name:'Publier',desc:'Multi-diffusion'},
-      {icon:'✏️',name:'Éditeur d\'annonces'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'🔄',name:'Synchronisation'},
-      {icon:'📸',name:'Optimiseur photos'},
-      {icon:'🎯',name:'Boost & mise en avant'}
-    ]
-  },
-  'immo-visites': {
-    title:'🚶 Visites & Sélections',
-    subtitle:'Planification et suivi des visites clients',
-    stats:[
-      {label:'Visites ce mois',value:'47',sub:'+8'},
-      {label:'À venir',value:'12',sub:'Cette semaine'},
-      {label:'Taux transformation',value:'18%',sub:'+2pts'},
-      {label:'Comptes-rendus',value:'45',sub:'+7'}
-    ],
-    tools:[
-      {icon:'📅',name:'Planifier visite'},
-      {icon:'✉️',name:'Convocation'},
-      {icon:'📝',name:'Compte-rendu'},
-      {icon:'📍',name:'Itinéraire'},
-      {icon:'⭐',name:'Feedback client'},
-      {icon:'📊',name:'Statistiques visites'}
-    ]
-  },
-  'immo-offres': {
-    title:'🤝 Offres & Négociations',
-    subtitle:'Suivi des offres et contre-propositions',
-    stats:[
-      {label:'Offres en cours',value:'14',sub:'+3'},
-      {label:'Acceptées',value:'6',sub:'+2'},
-      {label:'En négociation',value:'5',sub:'-1'},
-      {label:'Refusées',value:'3',sub:'Ce mois'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle offre'},
-      {icon:'📝',name:'Contre-proposition'},
-      {icon:'✉️',name:'Notifier vendeur'},
-      {icon:'📊',name:'Historique'},
-      {icon:'🖨️',name:'Générer document'},
-      {icon:'🔔',name:'Alertes négociation'}
-    ]
-  },
-  'immo-compromis': {
-    title:'✍️ Compromis & Actes',
-    subtitle:'Suivi des compromis et signatures notariales',
-    stats:[
-      {label:'Compromis en cours',value:'12'},
-      {label:'Signés ce mois',value:'7'},
-      {label:'Signatures à venir',value:'4'},
-      {label:'Délai moyen',value:'62 jours'}
-    ],
-    tools:[
-      {icon:'📄',name:'Générer compromis'},
-      {icon:'✒️',name:'Signature électronique'},
-      {icon:'📅',name:'Planning signatures'},
-      {icon:'🔔',name:'Rappels délais'},
-      {icon:'💼',name:'Notaires partenaires'},
-      {icon:'📊',name:'Tableau de suivi'}
-    ]
-  },
-  'immo-locations': {
-    title:'🔑 Locations & Baux',
-    subtitle:'Gestion des baux et locataires',
-    stats:[
-      {label:'Baux actifs',value:'86'},
-      {label:'Nouveaux ce mois',value:'5'},
-      {label:'À renouveler',value:'8'},
-      {label:'Impayés',value:'2',neg:true}
-    ],
-    tools:[
-      {icon:'📄',name:'Rédiger bail'},
-      {icon:'✒️',name:'Signature électronique'},
-      {icon:'📊',name:'État des lieux'},
-      {icon:'💰',name:'Encaissement loyers'},
-      {icon:'🔔',name:'Rappels échéances'},
-      {icon:'📋',name:'Modèles baux'}
-    ]
-  },
-  'immo-gestion': {
-    title:'🏘️ Gestion locative',
-    subtitle:'Suivi complet des biens en gestion',
-    stats:[
-      {label:'Biens gérés',value:'64'},
-      {label:'Loyers/mois',value:'48 200 €'},
-      {label:'Taux occupation',value:'96%'},
-      {label:'Incidents',value:'3',neg:true}
-    ],
-    tools:[
-      {icon:'💰',name:'Encaissements'},
-      {icon:'🔧',name:'Travaux & interventions'},
-      {icon:'📊',name:'Rapports propriétaires'},
-      {icon:'📋',name:'États des lieux'},
-      {icon:'📞',name:'Contacts artisans'},
-      {icon:'📈',name:'Rentabilité bien'}
-    ]
-  },
-  'immo-clients': {
-    title:'👥 Clients & Prospects',
-    subtitle:'CRM complet — gestion de la relation client',
-    stats:[
-      {label:'Total contacts',value:'428'},
-      {label:'Prospects actifs',value:'96',sub:'+12'},
-      {label:'Clients',value:'332'},
-      {label:'Nouveaux ce mois',value:'28',sub:'+5'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau contact'},
-      {icon:'📇',name:'Fiche client'},
-      {icon:'📞',name:'Historique appels'},
-      {icon:'✉️',name:'Emailing ciblé'},
-      {icon:'🎯',name:'Scoring prospect'},
-      {icon:'📊',name:'Segmentation'}
-    ]
-  },
-  'immo-matching': {
-    title:'🎯 Matching automatique',
-    subtitle:'Algorithme de rapprochement biens ↔ clients',
-    stats:[
-      {label:'Matchs ce mois',value:'42'},
-      {label:'Pertinence élevée',value:'18'},
-      {label:'Visites générées',value:'12'},
-      {label:'Ventes conclues',value:'3'}
-    ],
-    tools:[
-      {icon:'⚙️',name:'Critères matching'},
-      {icon:'🔔',name:'Alertes auto'},
-      {icon:'📊',name:'Score pertinence'},
-      {icon:'📧',name:'Notification client'},
-      {icon:'📈',name:'Statistiques'}
-    ]
-  },
-  'immo-relances': {
-    title:'⏰ Relances & Suivi',
-    subtitle:'Tâches et relances automatisées',
-    stats:[
-      {label:'Relances aujourd\'hui',value:'12',neg:true},
-      {label:'Cette semaine',value:'48'},
-      {label:'Automatisées',value:'86%'},
-      {label:'Taux réponse',value:'72%'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle relance'},
-      {icon:'🤖',name:'Automatisations'},
-      {icon:'📝',name:'Modèles messages'},
-      {icon:'📊',name:'Performance'},
-      {icon:'🔔',name:'Alertes intelligentes'}
-    ]
-  },
-  'immo-estimation': {
-    title:'🧮 Estimation & Évaluation',
-    subtitle:'Outils d\'estimation immobilière',
-    stats:[
-      {label:'Estimations ce mois',value:'24'},
-      {label:'Précision moyenne',value:'94%'},
-      {label:'Mandats signés',value:'8'},
-      {label:'Temps moyen',value:'12 min'}
-    ],
-    tools:[
-      {icon:'🧮',name:'Estimation rapide'},
-      {icon:'📊',name:'Comparables marché'},
-      {icon:'📈',name:'Évolution prix'},
-      {icon:'📄',name:'Rapport PDF'},
-      {icon:'🗺️',name:'Analyse quartier'},
-      {icon:'🤖',name:'Estimation IA'}
-    ]
-  },
-  'immo-diagnostics': {
-    title:'🔬 Diagnostics (DPE, etc.)',
-    subtitle:'Gestion des diagnostics techniques',
-    stats:[
-      {label:'DPE en cours',value:'18'},
-      {label:'Valides',value:'142'},
-      {label:'Expirent bientôt',value:'8',neg:true},
-      {label:'Diagnostiqueurs',value:'6'}
-    ],
-    tools:[
-      {icon:'📄',name:'Nouveau diagnostic'},
-      {icon:'🔔',name:'Alertes expiration'},
-      {icon:'📞',name:'Contact diagnostiqueurs'},
-      {icon:'📊',name:'Tableau de bord'},
-      {icon:'📁',name:'Archives diagnostics'}
-    ]
-  },
-  'immo-photos': {
-    title:'📸 Photos & Visites virtuelles',
-    subtitle:'Gestion multimédia des biens',
-    stats:[
-      {label:'Photos',value:'2 842'},
-      {label:'Visites 360°',value:'34'},
-      {label:'Vidéos',value:'18'},
-      {label:'Plans 3D',value:'12'}
-    ],
-    tools:[
-      {icon:'📤',name:'Uploader médias'},
-      {icon:'🤖',name:'Amélioration IA'},
-      {icon:'✂️',name:'Éditeur intégré'},
-      {icon:'🎬',name:'Créer visite virtuelle'},
-      {icon:'📤',name:'Diffusion auto'},
-      {icon:'🏷️',name:'Watermarking'}
-    ]
-  },
-  'immo-plans': {
-    title:'🗺️ Plans & Cadastre',
-    subtitle:'Plans techniques et données cadastrales',
-    stats:[
-      {label:'Plans',value:'142'},
-      {label:'Cadastre lié',value:'142'},
-      {label:'Surfaces calculées',value:'100%'},
-      {label:'Imports ce mois',value:'12'}
-    ],
-    tools:[
-      {icon:'📤',name:'Importer plan'},
-      {icon:'📐',name:'Mesurer surfaces'},
-      {icon:'🗺️',name:'Extraction cadastre'},
-      {icon:'📊',name:'Calcul Carrez'},
-      {icon:'📄',name:'Génération PDF'}
-    ]
-  },
-  'immo-honoraires': {
-    title:'💵 Honoraires & Commissions',
-    subtitle:'Calcul et suivi des honoraires',
-    stats:[
-      {label:'Commissions ce mois',value:'18 400 €',sub:'+12%'},
-      {label:'En attente',value:'6 200 €'},
-      {label:'Payées',value:'12 200 €'},
-      {label:'Taux moyen',value:'4,2%'}
-    ],
-    tools:[
-      {icon:'🧮',name:'Calculateur honoraires'},
-      {icon:'📄',name:'Générer facture'},
-      {icon:'💳',name:'Encaissement'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'📁',name:'Historique'}
-    ]
-  },
-  'immo-calculatrice': {
-    title:'🔢 Simulateur prêt & fiscalité',
-    subtitle:'Outils financiers pour vos clients',
-    stats:[
-      {label:'Simulations ce mois',value:'86'},
-      {label:'Prêts moyens',value:'320k €'},
-      {label:'Taux actuels',value:'3,45%'},
-      {label:'Partenaires bancaires',value:'8'}
-    ],
-    tools:[
-      {icon:'💰',name:'Simulateur prêt'},
-      {icon:'📊',name:'Tableau amortissement'},
-      {icon:'🧮',name:'Frais de notaire'},
-      {icon:'📈',name:'Rentabilité locative'},
-      {icon:'🏛️',name:'Fiscalité (LMNP, Pinel)'},
-      {icon:'📄',name:'Export PDF'}
-    ]
-  },
-  'immo-docs': {
-    title:'📄 Documents & Contrats',
-    subtitle:'Gestion documentaire complète',
-    stats:[
-      {label:'Documents',value:'4 842'},
-      {label:'Modèles',value:'48'},
-      {label:'Générés ce mois',value:'142'},
-      {label:'Stockage',value:'12,4 Go'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau document'},
-      {icon:'📁',name:'Modèles intelligents'},
-      {icon:'🔍',name:'Recherche avancée'},
-      {icon:'📤',name:'Partage sécurisé'},
-      {icon:'🖨️',name:'Génération PDF'},
-      {icon:'☁️',name:'Stockage cloud'}
-    ]
-  },
-  'immo-signature': {
-    title:'✒️ Signature électronique',
-    subtitle:'Signature légale et sécurisée',
-    stats:[
-      {label:'Signatures ce mois',value:'48'},
-      {label:'En attente',value:'7',neg:true},
-      {label:'Temps moyen',value:'2h24'},
-      {label:'Conformité',value:'eIDAS'}
-    ],
-    tools:[
-      {icon:'📤',name:'Envoyer à signer'},
-      {icon:'📋',name:'Suivi signature'},
-      {icon:'🔔',name:'Relance auto'},
-      {icon:'📁',name:'Coffre-fort'},
-      {icon:'🛡️',name:'Certificat eIDAS'}
-    ]
-  },
-  'immo-conformite': {
-    title:'🛡️ Conformité & RGPD',
-    subtitle:'Obligations légales et protection données',
-    stats:[
-      {label:'Conformité',value:'98%'},
-      {label:'Registre RGPD',value:'À jour'},
-      {label:'Consentements',value:'342'},
-      {label:'Audits',value:'3/3'}
-    ],
-    tools:[
-      {icon:'📋',name:'Registre traitements'},
-      {icon:'🔐',name:'Gestion consentements'},
-      {icon:'📊',name:'Audit conformité'},
-      {icon:'📄',name:'Modèles RGPD'},
-      {icon:'⚠️',name:'Alertes réglementaires'}
-    ]
-  },
-  'immo-archives': {
-    title:'🗄️ Archives',
-    subtitle:'Conservation légale des documents',
-    stats:[
-      {label:'Archives',value:'12 842'},
-      {label:'Volume',value:'48 Go'},
-      {label:'Rétention légale',value:'OK'},
-      {label:'Dernière sauvegarde',value:'Aujourd\'hui'}
-    ],
-    tools:[
-      {icon:'🔍',name:'Recherche archives'},
-      {icon:'📥',name:'Restauration'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'🔐',name:'Accès sécurisé'},
-      {icon:'💾',name:'Sauvegarde'}
-    ]
-  },
-  'immo-finance': {
-    title:'💰 Comptabilité & Factures',
-    subtitle:'Gestion financière de l\'agence',
-    stats:[
-      {label:'CA ce mois',value:'284k€',sub:'+12%'},
-      {label:'Factures en attente',value:'12',neg:true},
-      {label:'Charges',value:'128k€'},
-      {label:'Résultat',value:'156k€',sub:'+18%'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle facture'},
-      {icon:'📊',name:'Tableau de bord'},
-      {icon:'📥',name:'Rapprochement bancaire'},
-      {icon:'📄',name:'Devis'},
-      {icon:'📊',name:'TVA'},
-      {icon:'📤',name:'Export comptable'}
-    ]
-  },
-  'immo-analytics': {
-    title:'📈 Statistiques & KPIs',
-    subtitle:'Pilotage par la donnée',
-    stats:[
-      {label:'Mandats',value:'+18%'},
-      {label:'Visites',value:'+24%'},
-      {label:'Ventes',value:'+12%'},
-      {label:'CA',value:'+18%'}
-    ],
-    tools:[
-      {icon:'📊',name:'Tableau de bord KPI'},
-      {icon:'📈',name:'Évolution activité'},
-      {icon:'🎯',name:'Objectifs vs Réalisé'},
-      {icon:'👥',name:'Performance agents'},
-      {icon:'📄',name:'Rapports auto'}
-    ]
-  },
-  'immo-marche': {
-    title:'🌍 Analyse de marché',
-    subtitle:'Données de marché en temps réel',
-    stats:[
-      {label:'Prix moyen m²',value:'4 850 €',sub:'+2,4%'},
-      {label:'Délai vente',value:'62 jours'},
-      {label:'Stock',value:'-8%'},
-      {label:'Taux prêt',value:'3,45%'}
-    ],
-    tools:[
-      {icon:'📊',name:'Prix au m²'},
-      {icon:'🗺️',name:'Cartographie marché'},
-      {icon:'📈',name:'Tendances'},
-      {icon:'🔍',name:'Comparables'},
-      {icon:'📄',name:'Rapport marché'}
-    ]
-  },
-  'immo-objectifs': {
-    title:'🎯 Objectifs & Performance',
-    subtitle:'Pilotage de la performance',
-    stats:[
-      {label:'Objectif CA',value:'92%'},
-      {label:'Mandats',value:'86%'},
-      {label:'Visites',value:'78%'},
-      {label:'Ventes',value:'72%'}
-    ],
-    tools:[
-      {icon:'🎯',name:'Fixer objectifs'},
-      {icon:'📊',name:'Suivi temps réel'},
-      {icon:'🏆',name:'Classement équipe'},
-      {icon:'📈',name:'Prévisions'},
-      {icon:'🎁',name:'Primes & bonus'}
-    ]
-  },
-  'immo-marketing': {
-    title:'📣 Campagnes marketing',
-    subtitle:'Génération de leads et notoriété',
-    stats:[
-      {label:'Campagnes actives',value:'8'},
-      {label:'Leads ce mois',value:'142',sub:'+24%'},
-      {label:'Coût/lead',value:'28 €'},
-      {label:'ROI',value:'342%'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle campagne'},
-      {icon:'📊',name:'Performance'},
-      {icon:'🎯',name:'Ciblage'},
-      {icon:'📈',name:'A/B testing'},
-      {icon:'💰',name:'Budget & dépenses'}
-    ]
-  },
-  'immo-siteweb': {
-    title:'🌐 Site web & Portails',
-    subtitle:'Gestion de votre présence en ligne',
-    stats:[
-      {label:'Visiteurs/mois',value:'12,4k'},
-      {label:'Annonces en ligne',value:'98'},
-      {label:'Leads',value:'142'},
-      {label:'Taux conversion',value:'1,8%'}
-    ],
-    tools:[
-      {icon:'🌐',name:'Éditeur site'},
-      {icon:'📤',name:'Sync portails'},
-      {icon:'📊',name:'Analytics'},
-      {icon:'🎨',name:'Thèmes'},
-      {icon:'🔍',name:'SEO'}
-    ]
-  },
-  'immo-reseaux': {
-    title:'📱 Réseaux sociaux',
-    subtitle:'Publication et engagement',
-    stats:[
-      {label:'Abonnés',value:'8 420'},
-      {label:'Publications',value:'48/mois'},
-      {label:'Engagement',value:'4,2%'},
-      {label:'Leads',value:'24'}
-    ],
-    tools:[
-      {icon:'📅',name:'Planificateur'},
-      {icon:'🎨',name:'Créateur visuels'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'🔄',name:'Multi-publication'},
-      {icon:'💬',name:'Réponses auto'}
-    ]
-  },
-  'immo-emailing': {
-    title:'✉️ Emailing & Newsletter',
-    subtitle:'Communication par email',
-    stats:[
-      {label:'Contacts',value:'3 842'},
-      {label:'Taux ouverture',value:'42%'},
-      {label:'Taux clic',value:'12%'},
-      {label:'Emails/mois',value:'12 400'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle campagne'},
-      {icon:'🎨',name:'Éditeur drag&drop'},
-      {icon:'📋',name:'Templates'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'🤖',name:'Automatisations'},
-      {icon:'🎯',name:'Segmentation'}
-    ]
-  },
-  'immo-equipe': {
-    title:'🧑‍💼 Équipe & Rôles',
-    subtitle:'Gestion des utilisateurs et permissions',
-    stats:[
-      {label:'Membres',value:'12'},
-      {label:'Agents',value:'8'},
-      {label:'Managers',value:'3'},
-      {label:'En ligne',value:'7'}
-    ],
-    tools:[
-      {icon:'➕',name:'Inviter membre'},
-      {icon:'🔐',name:'Permissions'},
-      {icon:'📊',name:'Performance'},
-      {icon:'📅',name:'Planning équipe'},
-      {icon:'💬',name:'Chat interne'}
-    ]
-  },
-  'immo-taches': {
-    title:'✅ Tâches & Projets',
-    subtitle:'Gestion collaborative des tâches',
-    stats:[
-      {label:'Tâches actives',value:'42'},
-      {label:'Terminées',value:'128/mois'},
-      {label:'En retard',value:'5',neg:true},
-      {label:'Assignées',value:'12'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle tâche'},
-      {icon:'📋',name:'Kanban'},
-      {icon:'📅',name:'Calendrier'},
-      {icon:'🔔',name:'Rappels'},
-      {icon:'👥',name:'Assignation'}
-    ]
-  },
-  'immo-notifications': {
-    title:'🔔 Notifications & Alertes',
-    subtitle:'Centre de notifications intelligent',
-    stats:[
-      {label:'Non lues',value:'12',neg:true},
-      {label:'Aujourd\'hui',value:'28'},
-      {label:'Cette semaine',value:'142'},
-      {label:'Prioritaires',value:'5'}
-    ],
-    tools:[
-      {icon:'⚙️',name:'Préférences'},
-      {icon:'📧',name:'Email'},
-      {icon:'📱',name:'Push mobile'},
-      {icon:'💬',name:'SMS'},
-      {icon:'🔕',name:'Ne pas déranger'}
-    ]
-  },
-  'immo-integrations': {
-    title:'🔌 Intégrations & API',
-    subtitle:'Connectez vos outils préférés',
-    stats:[
-      {label:'Intégrations actives',value:'12'},
-      {label:'Disponibles',value:'48'},
-      {label:'API calls/mois',value:'142k'},
-      {label:'Webhooks',value:'8'}
-    ],
-    tools:[
-      {icon:'➕',name:'Ajouter intégration'},
-      {icon:'🔑',name:'Clés API'},
-      {icon:'📊',name:'Logs'},
-      {icon:'⚙️',name:'Webhooks'},
-      {icon:'📚',name:'Documentation'}
-    ]
-  },
-  'immo-parametres': {
-    title:'⚙️ Paramètres généraux',
-    subtitle:'Configuration de votre compte',
-    tools:[
-      {icon:'🏢',name:'Infos agence'},
-      {icon:'👤',name:'Mon profil'},
-      {icon:'🎨',name:'Apparence'},
-      {icon:'🔐',name:'Sécurité'},
-      {icon:'💳',name:'Abonnement'},
-      {icon:'🌍',name:'Localisation'},
-      {icon:'📊',name:'Rapports'},
-      {icon:'🔔',name:'Notifications'}
-    ]
-  },
-  'immo-aide': {
-    title:'❓ Aide & Support',
-    subtitle:'Nous sommes là pour vous aider',
-    tools:[
-      {icon:'📚',name:'Centre d\'aide'},
-      {icon:'💬',name:'Chat support'},
-      {icon:'📞',name:'Téléphone'},
-      {icon:'🎥',name:'Tutoriels vidéo'},
-      {icon:'📖',name:'Documentation'},
-      {icon:'💡',name:'Demander une fonctionnalité'}
-    ]
-  },
-  'arch-projets': {
-    title:'📐 Projets & Dossiers',
-    subtitle:'Gestion complète de vos projets architecturaux',
-    stats:[
-      {label:'Projets actifs',value:'17',sub:'+3'},
-      {label:'En conception',value:'9'},
-      {label:'En chantier',value:'8'},
-      {label:'Livrés ce mois',value:'2'}
-    ],
-    items:[
-      {icon:'🏗️',title:'Villa contemporaine — Annecy',sub:'210 m² · Maître d\'ouvrage: Famille Rousseau',tag:'Permis',tagClass:'pink'},
-      {icon:'🔨',title:'Rénovation Loft — Lyon 1er',sub:'95 m² · Chantier 65%',tag:'Chantier',tagClass:'orange'},
-      {icon:'📐',title:'Maison passive — Grenoble',sub:'160 m² · Étude thermique',tag:'Conception',tagClass:'green'},
-      {icon:'🎨',title:'Extension — Bordeaux',sub:'45 m² · Rendus en cours',tag:'Esquisse',tagClass:'purple'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau projet'},
-      {icon:'📋',name:'Fiche projet'},
-      {icon:'👥',name:'Intervenants'},
-      {icon:'📅',name:'Planning'},
-      {icon:'💰',name:'Budget'},
-      {icon:'📊',name:'Avancement'},
-      {icon:'📄',name:'Documents'},
-      {icon:'📸',name:'Photos chantier'}
-    ]
-  },
-  'arch-esquisse': {
-    title:'✏️ Esquisses & Avant-projets',
-    subtitle:'Conception et avant-projets',
-    stats:[
-      {label:'Esquisses en cours',value:'12'},
-      {label:'Validées',value:'8'},
-      {label:'En attente client',value:'3'},
-      {label:'Révisions',value:'6'}
-    ],
-    tools:[
-      {icon:'✏️',name:'Croquis numérique'},
-      {icon:'📐',name:'Esquisse 2D'},
-      {icon:'🎨',name:'Ambiances'},
-      {icon:'📊',name:'Variantes'},
-      {icon:'👥',name:'Validation client'},
-      {icon:'📤',name:'Export PDF/Image'}
-    ]
-  },
-  'arch-plans': {
-    title:'📏 Plans techniques (2D)',
-    subtitle:'Dessin technique et plans d\'exécution',
-    stats:[
-      {label:'Plans totaux',value:'842'},
-      {label:'Plans ce mois',value:'48'},
-      {label:'Validés',value:'92%'},
-      {label:'Exports',value:'124'}
-    ],
-    tools:[
-      {icon:'📐',name:'Dessin 2D'},
-      {icon:'📏',name:'Cotation'},
-      {icon:'🏗️',name:'Plans de coupe'},
-      {icon:'🔌',name:'Plans techniques'},
-      {icon:'📊',name:'Calques'},
-      {icon:'📤',name:'Export DWG/PDF'}
-    ]
-  },
-  'arch-maquettes': {
-    title:'🧊 Maquettes 3D & BIM',
-    subtitle:'Modélisation 3D et BIM',
-    stats:[
-      {label:'Maquettes 3D',value:'86'},
-      {label:'Modèles BIM',value:'24'},
-      {label:'Rendus',value:'142'},
-      {label:'Temps moyen',value:'12h'}
-    ],
-    tools:[
-      {icon:'🧊',name:'Modélisation 3D'},
-      {icon:'🏗️',name:'BIM Revit/IFC'},
-      {icon:'🎨',name:'Rendus photoréalistes'},
-      {icon:'🌍',name:'Intégration terrain'},
-      {icon:'📤',name:'Export formats'},
-      {icon:'🎬',name:'Animation 3D'}
-    ]
-  },
-  'arch-rendus': {
-    title:'🎨 Rendus & Perspectives',
-    subtitle:'Images photoréalistes et présentations',
-    stats:[
-      {label:'Rendus ce mois',value:'48'},
-      {label:'Moteur IA',value:'Activé'},
-      {label:'Temps moyen',value:'42 min'},
-      {label:'Validation client',value:'88%'}
-    ],
-    tools:[
-      {icon:'🎨',name:'Rendu photoréaliste'},
-      {icon:'🌅',name:'Ambiances jour/nuit'},
-      {icon:'🎬',name:'Animation'},
-      {icon:'🖼️',name:'Galerie'},
-      {icon:'📤',name:'Export HD'}
-    ]
-  },
-  'arch-notes': {
-    title:'📝 Notes de calcul',
-    subtitle:'Calculs structure et techniques',
-    stats:[
-      {label:'Notes actives',value:'68'},
-      {label:'Normes appliquées',value:'Eurocode'},
-      {label:'Vérifications',value:'100%'},
-      {label:'Ce mois',value:'12'}
-    ],
-    tools:[
-      {icon:'📝',name:'Note de calcul'},
-      {icon:'🧮',name:'Calcul structure'},
-      {icon:'📐',name:'Dimensionnement'},
-      {icon:'📊',name:'Vérification normes'},
-      {icon:'📤',name:'Export PDF'}
-    ]
-  },
-  'arch-thermique': {
-    title:'🌡️ Études thermiques (RE2020)',
-    subtitle:'Conformité RE2020 et performance énergétique',
-    stats:[
-      {label:'Études',value:'24'},
-      {label:'Conformes',value:'96%'},
-      {label:'Bbio moyen',value:'72'},
-      {label:'En cours',value:'5'}
-    ],
-    tools:[
-      {icon:'🌡️',name:'Calcul Bbio'},
-      {icon:'📊',name:'Simulation énergétique'},
-      {icon:'☀️',name:'Étude solaire'},
-      {icon:'💨',name:'Ventilation'},
-      {icon:'📄',name:'Rapport RE2020'},
-      {icon:'🏆',name:'Certifications'}
-    ]
-  },
-  'arch-structure': {
-    title:'🏗️ Structure & Béton armé',
-    subtitle:'Études structurelles',
-    stats:[
-      {label:'Études',value:'42'},
-      {label:'Calculs',value:'182'},
-      {label:'Plans',value:'68'},
-      {label:'Vérifications',value:'98%'}
-    ],
-    tools:[
-      {icon:'🏗️',name:'Calcul béton armé'},
-      {icon:'🔩',name:'Calcul charpente'},
-      {icon:'📐',name:'Plans de ferraillage'},
-      {icon:'📊',name:'Notes de calcul'},
-      {icon:'🏛️',name:'Eurocodes'}
-    ]
-  },
-  'arch-permis': {
-    title:'📋 Permis de construire',
-    subtitle:'Dossiers d\'autorisation d\'urbanisme',
-    stats:[
-      {label:'Permis déposés',value:'12'},
-      {label:'Accordés',value:'9'},
-      {label:'En instruction',value:'3'},
-      {label:'Délai moyen',value:'62 jours'}
-    ],
-    tools:[
-      {icon:'📄',name:'Monter dossier PC'},
-      {icon:'📤',name:'Dépôt en ligne'},
-      {icon:'📅',name:'Suivi instruction'},
-      {icon:'🔔',name:'Alertes délais'},
-      {icon:'📋',name:'Modèles CERFA'},
-      {icon:'🗺️',name:'Plans de situation'}
-    ]
-  },
-  'arch-declarations': {
-    title:'📑 Déclarations préalables',
-    subtitle:'DP et autorisations diverses',
-    stats:[
-      {label:'DP actives',value:'18'},
-      {label:'Accordées',value:'15'},
-      {label:'En cours',value:'3'},
-      {label:'Délai moyen',value:'32 jours'}
-    ],
-    tools:[
-      {icon:'📄',name:'Nouvelle DP'},
-      {icon:'📤',name:'Dépôt mairie'},
-      {icon:'📅',name:'Suivi'},
-      {icon:'📋',name:'CERFA'},
-      {icon:'🔔',name:'Rappels'}
-    ]
-  },
-  'arch-urbanisme': {
-    title:'🏛️ Urbanisme & PLU',
-    subtitle:'Réglementation et conformité urbanisme',
-    stats:[
-      {label:'PLU consultés',value:'48'},
-      {label:'Communes',value:'24'},
-      {label:'Analyses',value:'86'},
-      {label:'Alertes',value:'5'}
-    ],
-    tools:[
-      {icon:'🗺️',name:'Consultation PLU'},
-      {icon:'📊',name:'Analyse parcelle'},
-      {icon:'⚠️',name:'Contraintes'},
-      {icon:'🏛️',name:'Servitudes'},
-      {icon:'📄',name:'Certificat urbanisme'},
-      {icon:'🔔',name:'Veille réglementaire'}
-    ]
-  },
-  'arch-conformite': {
-    title:'🛡️ Conformité & Normes',
-    subtitle:'Respect des normes et réglementations',
-    stats:[
-      {label:'Normes',value:'142'},
-      {label:'Conformité',value:'98%'},
-      {label:'Audits',value:'12'},
-      {label:'Alertes',value:'3'}
-    ],
-    tools:[
-      {icon:'📋',name:'Checklist conformité'},
-      {icon:'🏛️',name:'Normes applicables'},
-      {icon:'⚠️',name:'Non-conformités'},
-      {icon:'📊',name:'Rapports audit'},
-      {icon:'🔔',name:'Alertes réglementaires'}
-    ]
-  },
-  'arch-appels-offres': {
-    title:'📢 Appels d\'offres publics',
-    subtitle:'Réponse aux marchés publics',
-    stats:[
-      {label:'En cours',value:'5'},
-      {label:'Remportés',value:'2'},
-      {label:'Taux réussite',value:'40%'},
-      {label:'Montant',value:'842k€'}
-    ],
-    tools:[
-      {icon:'🔍',name:'Veille AO'},
-      {icon:'📄',name:'Mémoire technique'},
-      {icon:'📊',name:'Chiffrage'},
-      {icon:'📤',name:'Dépôt dossier'},
-      {icon:'📋',name:'Suivi candidatures'}
-    ]
-  },
-  'arch-chantiers': {
-    title:'🏗️ Chantiers en cours',
-    subtitle:'Suivi et pilotage de chantier',
-    stats:[
-      {label:'Chantiers actifs',value:'8'},
-      {label:'Avancement moyen',value:'62%'},
-      {label:'Visites ce mois',value:'24'},
-      {label:'Réceptions',value:'2'}
-    ],
-    items:[
-      {icon:'🔨',title:'Loft Lyon 1er',sub:'Avancement 65% · Fin prévue 30/04',tag:'En cours',tagClass:'orange'},
-      {icon:'🏗️',title:'Villa Annecy',sub:'Démarrage prévu 15/04',tag:'À démarrer',tagClass:'blue'},
-      {icon:'✅',title:'Maison Grenoble',sub:'Réception faite le 28/02',tag:'Terminé',tagClass:'green'}
-    ],
-    tools:[
-      {icon:'📸',name:'Photos chantier'},
-      {icon:'📝',name:'Compte-rendu visite'},
-      {icon:'📅',name:'Planning'},
-      {icon:'📊',name:'Avancement'},
-      {icon:'👥',name:'Intervenants'},
-      {icon:'⚠️',name:'Non-conformités'},
-      {icon:'📋',name:'OPR'},
-      {icon:'🔔',name:'Alertes'}
-    ]
-  },
-  'arch-planning': {
-    title:'📆 Planning & Gantt',
-    subtitle:'Planification des projets et chantiers',
-    stats:[
-      {label:'Tâches planifiées',value:'248'},
-      {label:'En retard',value:'6',neg:true},
-      {label:'Cette semaine',value:'42'},
-      {label:'Jalons',value:'18'}
-    ],
-    tools:[
-      {icon:'📅',name:'Diagramme de Gantt'},
-      {icon:'📊',name:'Kanban'},
-      {icon:'👥',name:'Ressources'},
-      {icon:'⚠️',name:'Chemin critique'},
-      {icon:'🔔',name:'Alertes'},
-      {icon:'📤',name:'Export planning'}
-    ]
-  },
-  'arch-lots': {
-    title:'🧱 Lots & Corps d\'état',
-    subtitle:'Décomposition en lots techniques',
-    stats:[
-      {label:'Lots',value:'142'},
-      {label:'Corps d\'état',value:'18'},
-      {label:'Attribués',value:'124'},
-      {label:'En attente',value:'18'}
-    ],
-    tools:[
-      {icon:'📋',name:'Liste des lots'},
-      {icon:'👥',name:'Attribution'},
-      {icon:'📊',name:'Suivi par lot'},
-      {icon:'💰',name:'Budget par lot'},
-      {icon:'📅',name:'Planning par lot'}
-    ]
-  },
-  'arch-entreprises': {
-    title:'🚧 Entreprises & Artisans',
-    subtitle:'Annuaire et suivi des intervenants',
-    stats:[
-      {label:'Entreprises',value:'86'},
-      {label:'Actives',value:'42'},
-      {label:'En évaluation',value:'8'},
-      {label:'Blacklist',value:'2',neg:true}
-    ],
-    tools:[
-      {icon:'➕',name:'Ajouter entreprise'},
-      {icon:'⭐',name:'Notation'},
-      {icon:'📊',name:'Performance'},
-      {icon:'📄',name:'Documents légaux'},
-      {icon:'📞',name:'Contacts'},
-      {icon:'💰',name:'Devis & factures'}
-    ]
-  },
-  'arch-devis': {
-    title:'📊 Devis & Estimations',
-    subtitle:'Chiffrage et devis',
-    stats:[
-      {label:'Devis en cours',value:'24'},
-      {label:'Validés',value:'12'},
-      {label:'Montant total',value:'1,8M€'},
-      {label:'Taux validation',value:'68%'}
-    ],
-    tools:[
-      {icon:'🧮',name:'Chiffrage détaillé'},
-      {icon:'📋',name:'Bibliothèque prix'},
-      {icon:'📄',name:'Générer devis'},
-      {icon:'📤',name:'Envoyer client'},
-      {icon:'✒️',name:'Signature électronique'},
-      {icon:'📊',name:'Comparatifs'}
-    ]
-  },
-  'arch-appels': {
-    title:'💰 Appels de fonds',
-    subtitle:'Facturation et appels de fonds',
-    stats:[
-      {label:'Appels ce mois',value:'18'},
-      {label:'Encaissés',value:'14'},
-      {label:'En attente',value:'4',neg:true},
-      {label:'Montant',value:'248k€'}
-    ],
-    tools:[
-      {icon:'📄',name:'Nouvel appel'},
-      {icon:'📊',name:'Suivi encaissement'},
-      {icon:'🔔',name:'Relances auto'},
-      {icon:'📈',name:'Trésorerie'},
-      {icon:'📤',name:'Export comptable'}
-    ]
-  },
-  'arch-receptions': {
-    title:'✅ Réceptions & Réserves',
-    subtitle:'Réception de chantier et levée de réserves',
-    stats:[
-      {label:'Réceptions',value:'12'},
-      {label:'Réserves en cours',value:'8',neg:true},
-      {label:'Levées ce mois',value:'14'},
-      {label:'Taux levée',value:'94%'}
-    ],
-    tools:[
-      {icon:'📋',name:'PV de réception'},
-      {icon:'📸',name:'Photos réserves'},
-      {icon:'📅',name:'Suivi levée'},
-      {icon:'🔔',name:'Alertes'},
-      {icon:'📄',name:'PV levée réserves'}
-    ]
-  },
-  'arch-opr': {
-    title:'🔍 OPR & Levée de réserves',
-    subtitle:'Opérations préalables à la réception',
-    stats:[
-      {label:'OPR en cours',value:'6'},
-      {label:'Terminées',value:'24'},
-      {label:'Réserves',value:'18'},
-      {label:'Levées',value:'16'}
-    ],
-    tools:[
-      {icon:'📋',name:'Checklist OPR'},
-      {icon:'📸',name:'Reportage photos'},
-      {icon:'📊',name:'Suivi réserves'},
-      {icon:'🔔',name:'Rappels'},
-      {icon:'📄',name:'PV OPR'}
-    ]
-  },
-  'arch-clients': {
-    title:'👥 Maîtres d\'ouvrage',
-    subtitle:'CRM clients architecte',
-    stats:[
-      {label:'Clients',value:'86'},
-      {label:'Particuliers',value:'62'},
-      {label:'Professionnels',value:'24'},
-      {label:'Fidélisés',value:'42%'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau client'},
-      {icon:'📇',name:'Fiche client'},
-      {icon:'📞',name:'Historique'},
-      {icon:'📊',name:'Projets liés'},
-      {icon:'✉️',name:'Emailing'},
-      {icon:'📈',name:'Analytics'}
-    ]
-  },
-  'arch-prospects': {
-    title:'🎯 Prospects & Pistes',
-    subtitle:'Développement commercial',
-    stats:[
-      {label:'Prospects actifs',value:'42'},
-      {label:'Nouveaux ce mois',value:'12',sub:'+3'},
-      {label:'Taux conversion',value:'28%'},
-      {label:'Pipeline',value:'1,2M€'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau prospect'},
-      {icon:'📊',name:'Pipeline'},
-      {icon:'🎯',name:'Scoring'},
-      {icon:'📞',name:'Relances'},
-      {icon:'📈',name:'Prévisions'}
-    ]
-  },
-  'arch-partenaires': {
-    title:'🤝 Partenaires & Bureaux d\'études',
-    subtitle:'Réseau professionnel',
-    stats:[
-      {label:'Partenaires',value:'42'},
-      {label:'BET',value:'12'},
-      {label:'Économistes',value:'8'},
-      {label:'Paysagistes',value:'6'}
-    ],
-    tools:[
-      {icon:'➕',name:'Ajouter partenaire'},
-      {icon:'📇',name:'Annuaire'},
-      {icon:'📊',name:'Collaborations'},
-      {icon:'📄',name:'Contrats'},
-      {icon:'💬',name:'Messagerie'}
-    ]
-  },
-  'arch-relances': {
-    title:'⏰ Relances & Suivi',
-    subtitle:'Automatisation des relances',
-    stats:[
-      {label:'À relancer aujourd\'hui',value:'8',neg:true},
-      {label:'Cette semaine',value:'24'},
-      {label:'Automatiques',value:'86%'},
-      {label:'Taux réponse',value:'72%'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle relance'},
-      {icon:'🤖',name:'Automatisations'},
-      {icon:'📝',name:'Modèles'},
-      {icon:'📊',name:'Performance'},
-      {icon:'🔔',name:'Alertes'}
-    ]
-  },
-  'arch-materiaux': {
-    title:'🪵 Bibliothèque matériaux',
-    subtitle:'Base de données matériaux',
-    stats:[
-      {label:'Matériaux',value:'842'},
-      {label:'Fournisseurs',value:'124'},
-      {label:'Fiches techniques',value:'842'},
-      {label:'Prix à jour',value:'92%'}
-    ],
-    tools:[
-      {icon:'🔍',name:'Recherche'},
-      {icon:'📊',name:'Comparateur'},
-      {icon:'🏷️',name:'Prix & fournisseurs'},
-      {icon:'📄',name:'Fiches techniques'},
-      {icon:'🌱',name:'Éco-matériaux'}
-    ]
-  },
-  'arch-bibliotheque': {
-    title:'📚 Bibliothèque composants',
-    subtitle:'Bibliothèque de composants BIM/CAD',
-    stats:[
-      {label:'Composants',value:'4 842'},
-      {label:'Familles',value:'86'},
-      {label:'Marques',value:'142'},
-      {label:'Formats',value:'DWG, RFA, IFC'}
-    ],
-    tools:[
-      {icon:'🔍',name:'Recherche'},
-      {icon:'📥',name:'Import'},
-      {icon:'📤',name:'Export'},
-      {icon:'🏷️',name:'Catégories'},
-      {icon:'⭐',name:'Favoris'}
-    ]
-  },
-  'arch-calculs': {
-    title:'🧮 Calculs techniques',
-    subtitle:'Outils de calcul professionnel',
-    tools:[
-      {icon:'🏗️',name:'Calcul structure'},
-      {icon:'🌡️',name:'Thermique'},
-      {icon:'💡',name:'Éclairage'},
-      {icon:'💧',name:'Plomberie'},
-      {icon:'⚡',name:'Électricité'},
-      {icon:'📐',name:'Surfaces & volumes'},
-      {icon:'🌬️',name:'Ventilation'},
-      {icon:'🔊',name:'Acoustique'}
-    ]
-  },
-  'arch-diagnostics': {
-    title:'🔬 Diagnostics & Audits',
-    subtitle:'Audits techniques de bâtiment',
-    stats:[
-      {label:'Diagnostics',value:'48'},
-      {label:'Audits',value:'24'},
-      {label:'En cours',value:'6'},
-      {label:'Ce mois',value:'8'}
-    ],
-    tools:[
-      {icon:'🔬',name:'Diagnostic structure'},
-      {icon:'🌡️',name:'Audit énergétique'},
-      {icon:'📋',name:'Rapport'},
-      {icon:'📸',name:'Photos'},
-      {icon:'🔔',name:'Recommandations'}
-    ]
-  },
-  'arch-photos': {
-    title:'📸 Photos chantier & drone',
-    subtitle:'Reportage photographique',
-    stats:[
-      {label:'Photos',value:'12 842'},
-      {label:'Vidéos drone',value:'42'},
-      {label:'Visites 360°',value:'18'},
-      {label:'Volume',value:'82 Go'}
-    ],
-    tools:[
-      {icon:'📤',name:'Uploader'},
-      {icon:'🎬',name:'Vidéo drone'},
-      {icon:'🌐',name:'Visite 360°'},
-      {icon:'🏷️',name:'Classement'},
-      {icon:'📤',name:'Partage client'},
-      {icon:'🎨',name:'Édition'}
-    ]
-  },
-  'arch-signature': {
-    title:'✒️ Signature électronique',
-    subtitle:'Signature sécurisée eIDAS',
-    stats:[
-      {label:'Signatures ce mois',value:'24'},
-      {label:'En attente',value:'5',neg:true},
-      {label:'Conformité',value:'eIDAS'},
-      {label:'Temps moyen',value:'2h48'}
-    ],
-    tools:[
-      {icon:'📤',name:'Envoyer à signer'},
-      {icon:'📋',name:'Suivi'},
-      {icon:'🔔',name:'Relances'},
-      {icon:'📁',name:'Coffre-fort'},
-      {icon:'🛡️',name:'Certificat'}
-    ]
-  },
-  'arch-docs': {
-    title:'📄 Documents & Contrats',
-    subtitle:'Gestion documentaire architecte',
-    stats:[
-      {label:'Documents',value:'4 842'},
-      {label:'Modèles',value:'48'},
-      {label:'Générés ce mois',value:'142'},
-      {label:'Stockage',value:'48 Go'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouveau document'},
-      {icon:'📁',name:'Modèles'},
-      {icon:'🔍',name:'Recherche'},
-      {icon:'📤',name:'Partage'},
-      {icon:'📄',name:'Génération PDF'},
-      {icon:'☁️',name:'Cloud'}
-    ]
-  },
-  'arch-contrats': {
-    title:'📜 Contrats de maîtrise d\'œuvre',
-    subtitle:'Contrats et missions',
-    stats:[
-      {label:'Contrats actifs',value:'42'},
-      {label:'Signés ce mois',value:'6'},
-      {label:'En attente',value:'3'},
-      {label:'Modèles',value:'8'}
-    ],
-    tools:[
-      {icon:'📄',name:'Nouveau contrat'},
-      {icon:'📋',name:'Modèles'},
-      {icon:'✒️',name:'Signature'},
-      {icon:'📊',name:'Suivi'},
-      {icon:'💰',name:'Honoraires'}
-    ]
-  },
-  'arch-assurances': {
-    title:'🛡️ Assurances & Décennale',
-    subtitle:'Gestion des assurances professionnelles',
-    stats:[
-      {label:'Polices',value:'8'},
-      {label:'Décennale',value:'À jour'},
-      {label:'RC Pro',value:'À jour'},
-      {label:'Échéances',value:'3'}
-    ],
-    tools:[
-      {icon:'📋',name:'Polices'},
-      {icon:'🔔',name:'Échéances'},
-      {icon:'📄',name:'Attestations'},
-      {icon:'📊',name:'Historique sinistres'},
-      {icon:'💼',name:'Courtier'}
-    ]
-  },
-  'arch-archives': {
-    title:'🗄️ Archives projets',
-    subtitle:'Conservation légale',
-    stats:[
-      {label:'Projets archivés',value:'248'},
-      {label:'Volume',value:'128 Go'},
-      {label:'Rétention',value:'OK'},
-      {label:'Dernière sauvegarde',value:'Aujourd\'hui'}
-    ],
-    tools:[
-      {icon:'🔍',name:'Recherche'},
-      {icon:'📥',name:'Restauration'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'🔐',name:'Accès'},
-      {icon:'💾',name:'Sauvegarde'}
-    ]
-  },
-  'arch-finance': {
-    title:'💰 Honoraires & Factures',
-    subtitle:'Facturation et suivi des honoraires',
-    stats:[
-      {label:'CA ce mois',value:'127k€',sub:'+18%'},
-      {label:'Factures en attente',value:'8',neg:true},
-      {label:'Encaissées',value:'108k€'},
-      {label:'Taux recouvrement',value:'92%'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle facture'},
-      {icon:'📊',name:'Tableau de bord'},
-      {icon:'💰',name:'Encaissements'},
-      {icon:'📄',name:'Devis'},
-      {icon:'📊',name:'TVA'},
-      {icon:'📤',name:'Export'}
-    ]
-  },
-  'arch-rentabilite': {
-    title:'📈 Rentabilité projets',
-    subtitle:'Analyse de la rentabilité',
-    stats:[
-      {label:'Marge moyenne',value:'32%'},
-      {label:'Meilleur projet',value:'42%'},
-      {label:'En difficulté',value:'2',neg:true},
-      {label:'CA/projet',value:'82k€'}
-    ],
-    tools:[
-      {icon:'📊',name:'Analyse par projet'},
-      {icon:'📈',name:'Marge & coûts'},
-      {icon:'⏱️',name:'Temps passé'},
-      {icon:'📄',name:'Rapports'},
-      {icon:'🎯',name:'Objectifs'}
-    ]
-  },
-  'arch-analytics': {
-    title:'📊 Statistiques & KPIs',
-    subtitle:'Pilotage du cabinet',
-    stats:[
-      {label:'Projets',value:'+18%'},
-      {label:'CA',value:'+24%'},
-      {label:'Marge',value:'+2pts'},
-      {label:'Délais',value:'-8%'}
-    ],
-    tools:[
-      {icon:'📊',name:'Tableau de bord'},
-      {icon:'📈',name:'Évolution'},
-      {icon:'🎯',name:'Objectifs'},
-      {icon:'👥',name:'Performance équipe'},
-      {icon:'📄',name:'Rapports auto'}
-    ]
-  },
-  'arch-temps': {
-    title:'⏱️ Suivi du temps',
-    subtitle:'Time tracking et facturation au temps',
-    stats:[
-      {label:'Heures ce mois',value:'842h'},
-      {label:'Facturables',value:'68%'},
-      {label:'Taux horaire',value:'85 €'},
-      {label:'CA/h',value:'48k€'}
-    ],
-    tools:[
-      {icon:'⏱️',name:'Chronomètre'},
-      {icon:'📊',name:'Timesheet'},
-      {icon:'📈',name:'Analyse temps'},
-      {icon:'💰',name:'Facturation'},
-      {icon:'📄',name:'Rapports'}
-    ]
-  },
-  'arch-portfolio': {
-    title:'🎨 Portfolio & Réalisations',
-    subtitle:'Vitrine de vos projets',
-    stats:[
-      {label:'Projets publiés',value:'42'},
-      {label:'Vues',value:'24,8k'},
-      {label:'Publications',value:'18'},
-      {label:'Leads générés',value:'24'}
-    ],
-    tools:[
-      {icon:'➕',name:'Ajouter projet'},
-      {icon:'🎨',name:'Éditeur portfolio'},
-      {icon:'📤',name:'Publication'},
-      {icon:'📊',name:'Statistiques'},
-      {icon:'🌐',name:'Portfolio web'}
-    ]
-  },
-  'arch-siteweb': {
-    title:'🌐 Site web & Vitrine',
-    subtitle:'Présence en ligne',
-    stats:[
-      {label:'Visiteurs/mois',value:'8,4k'},
-      {label:'Pages vues',value:'24k'},
-      {label:'Leads',value:'42'},
-      {label:'Taux rebond',value:'42%'}
-    ],
-    tools:[
-      {icon:'🌐',name:'Éditeur site'},
-      {icon:'📊',name:'Analytics'},
-      {icon:'🎨',name:'Thèmes'},
-      {icon:'🔍',name:'SEO'},
-      {icon:'📝',name:'Blog'}
-    ]
-  },
-  'arch-reseaux': {
-    title:'📱 Réseaux sociaux',
-    subtitle:'Communication réseaux',
-    stats:[
-      {label:'Abonnés',value:'12,4k'},
-      {label:'Engagement',value:'5,2%'},
-      {label:'Publications',value:'42/mois'},
-      {label:'Leads',value:'18'}
-    ],
-    tools:[
-      {icon:'📅',name:'Planificateur'},
-      {icon:'🎨',name:'Créateur'},
-      {icon:'📊',name:'Stats'},
-      {icon:'🔄',name:'Multi-publication'},
-      {icon:'💬',name:'Interactions'}
-    ]
-  },
-  'arch-emailing': {
-    title:'✉️ Emailing & Newsletter',
-    subtitle:'Communication email',
-    stats:[
-      {label:'Contacts',value:'2 842'},
-      {label:'Taux ouverture',value:'44%'},
-      {label:'Taux clic',value:'14%'},
-      {label:'Emails/mois',value:'8 400'}
-    ],
-    tools:[
-      {icon:'➕',name:'Campagne'},
-      {icon:'🎨',name:'Éditeur'},
-      {icon:'📋',name:'Templates'},
-      {icon:'📊',name:'Stats'},
-      {icon:'🤖',name:'Automations'}
-    ]
-  },
-  'arch-equipe': {
-    title:'🧑‍💼 Équipe & Rôles',
-    subtitle:'Gestion de l\'équipe',
-    stats:[
-      {label:'Membres',value:'8'},
-      {label:'Architectes',value:'4'},
-      {label:'Dessinateurs',value:'2'},
-      {label:'En ligne',value:'5'}
-    ],
-    tools:[
-      {icon:'➕',name:'Inviter'},
-      {icon:'🔐',name:'Permissions'},
-      {icon:'📊',name:'Performance'},
-      {icon:'📅',name:'Planning'},
-      {icon:'💬',name:'Chat'}
-    ]
-  },
-  'arch-taches': {
-    title:'✅ Tâches & Projets',
-    subtitle:'Gestion collaborative',
-    stats:[
-      {label:'Actives',value:'42'},
-      {label:'Terminées',value:'142/mois'},
-      {label:'En retard',value:'6',neg:true},
-      {label:'Assignées',value:'8'}
-    ],
-    tools:[
-      {icon:'➕',name:'Nouvelle tâche'},
-      {icon:'📋',name:'Kanban'},
-      {icon:'📅',name:'Calendrier'},
-      {icon:'🔔',name:'Rappels'},
-      {icon:'👥',name:'Assignation'}
-    ]
-  },
-  'arch-notifications': {
-    title:'🔔 Notifications & Alertes',
-    subtitle:'Centre de notifications',
-    stats:[
-      {label:'Non lues',value:'8',neg:true},
-      {label:'Aujourd\'hui',value:'24'},
-      {label:'Cette semaine',value:'128'},
-      {label:'Prioritaires',value:'4'}
-    ],
-    tools:[
-      {icon:'⚙️',name:'Préférences'},
-      {icon:'📧',name:'Email'},
-      {icon:'📱',name:'Push'},
-      {icon:'💬',name:'SMS'},
-      {icon:'🔕',name:'DND'}
-    ]
-  },
-  'arch-integrations': {
-    title:'🔌 Intégrations & API',
-    subtitle:'Connectez vos outils',
-    stats:[
-      {label:'Actives',value:'14'},
-      {label:'Disponibles',value:'48'},
-      {label:'API calls/mois',value:'248k'},
-      {label:'Webhooks',value:'12'}
-    ],
-    tools:[
-      {icon:'➕',name:'Ajouter'},
-      {icon:'🔑',name:'Clés API'},
-      {icon:'📊',name:'Logs'},
-      {icon:'⚙️',name:'Webhooks'},
-      {icon:'📚',name:'Documentation'}
-    ]
-  },
-  'arch-parametres': {
-    title:'⚙️ Paramètres généraux',
-    subtitle:'Configuration du cabinet',
-    tools:[
-      {icon:'🏢',name:'Infos cabinet'},
-      {icon:'👤',name:'Mon profil'},
-      {icon:'🎨',name:'Apparence'},
-      {icon:'🔐',name:'Sécurité'},
-      {icon:'💳',name:'Abonnement'},
-      {icon:'🌍',name:'Localisation'},
-      {icon:'📊',name:'Rapports'},
-      {icon:'🔔',name:'Notifications'}
-    ]
-  },
-  'arch-aide': {
-    title:'❓ Aide & Support',
-    subtitle:'Support et documentation',
-    tools:[
-      {icon:'📚',name:'Centre d\'aide'},
-      {icon:'💬',name:'Chat support'},
-      {icon:'📞',name:'Téléphone'},
-      {icon:'🎥',name:'Tutoriels'},
-      {icon:'📖',name:'Documentation'},
-      {icon:'💡',name:'Suggérer'}
-    ]
-  }
-};
-
-/* ============================================================
    ÉTAT GLOBAL
    ============================================================ */
 var currentMode = 'immo';
 var currentPage = 'immo-dashboard';
+var searchTerm = '';
 
 /* ============================================================
-   RENDU DU MENU
+   RENDU MENU
    ============================================================ */
 function renderMenu() {
   var menu = currentMode === 'immo' ? MENU_IMMO : MENU_ARCH;
@@ -1907,179 +519,968 @@ function renderMenu() {
     } else {
       var el = document.createElement('div');
       el.className = 'nav-item' + (item.id === currentPage ? ' active' : '');
-      var badgeHtml = item.badge ? '<span class="badge ' + (item.badgeClass||'') + '">' + item.badge + '</span>' : '';
-      el.innerHTML = '<span class="icon">' + item.icon + '</span><span>' + item.label + '</span>' + badgeHtml;
-      el.onclick = (function(id, label) {
-        return function() { navigate(id, label); };
-      })(item.id, item.label);
+      el.innerHTML = '<span class="icon">' + item.icon + '</span><span>' + item.label + '</span>';
+      el.onclick = (function(id) { return function() { navigate(id); }; })(item.id);
       container.appendChild(el);
     }
   });
 }
 
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
-function navigate(pageId, label) {
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('backdrop').classList.toggle('show');
+}
+
+function navigate(pageId) {
   currentPage = pageId;
   renderMenu();
-  renderPage(pageId, label);
+  renderPage(pageId);
+  if (window.innerWidth <= 900) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('backdrop').classList.remove('show');
+  }
 }
 
 /* ============================================================
-   RENDU DES PAGES
+   RENDU PAGE
    ============================================================ */
-function renderPage(pageId, label) {
+function renderPage(pageId) {
   var c = document.getElementById('content');
   var isImmo = pageId.indexOf('immo-') === 0;
   var color = isImmo ? 'blue' : 'pink';
 
   if (pageId === 'immo-dashboard') { c.innerHTML = dashboardImmo(); return; }
   if (pageId === 'arch-dashboard') { c.innerHTML = dashboardArch(); return; }
+  if (pageId === 'immo-biens') { c.innerHTML = pageBiens(); return; }
+  if (pageId === 'immo-clients') { c.innerHTML = pageClients(); return; }
+  if (pageId === 'arch-projets') { c.innerHTML = pageProjets(); return; }
+  if (pageId === 'arch-chantiers') { c.innerHTML = pageChantiers(); return; }
+  if (pageId === 'immo-taches' || pageId === 'arch-taches') { c.innerHTML = pageTaches(); return; }
+  if (pageId === 'immo-agenda' || pageId === 'arch-agenda') { c.innerHTML = pageAgenda(); return; }
+  if (pageId === 'immo-messagerie' || pageId === 'arch-messagerie') { c.innerHTML = pageMessagerie(); return; }
+  if (pageId === 'immo-docs' || pageId === 'arch-docs') { c.innerHTML = pageDocuments(); return; }
+  if (pageId === 'immo-finance' || pageId === 'arch-finance') { c.innerHTML = pageFinance(); return; }
+  if (pageId === 'immo-estimation') { c.innerHTML = pageEstimation(); return; }
+  if (pageId === 'immo-signature' || pageId === 'arch-signature') { c.innerHTML = pageSignature(); return; }
+  if (pageId === 'immo-notifications' || pageId === 'arch-notifications') { c.innerHTML = pageNotifications(); return; }
+  if (pageId === 'immo-parametres' || pageId === 'arch-parametres') { c.innerHTML = pageParametres(); return; }
 
-  var config = PAGES[pageId] || {
-    title: label || 'Module',
-    subtitle: 'Module en cours de développement',
-    stats: [],
-    items: [],
-    tools: []
+  // Page générique avec outils
+  var config = getGenericConfig(pageId);
+  c.innerHTML = renderGenericPage(config, color);
+}
+
+function getGenericConfig(pageId) {
+  var titles = {
+    'immo-mandats':'📜 Mandats & Exclusivités','immo-annonces':'📢 Annonces & Diffusion',
+    'immo-visites':'🚶 Visites & Sélections','immo-offres':'🤝 Offres & Négociations',
+    'immo-compromis':'✍️ Compromis & Actes','immo-locations':'🔑 Locations & Baux',
+    'immo-matching':'🎯 Matching automatique','immo-relances':'⏰ Relances & Suivi',
+    'immo-diagnostics':'🔬 Diagnostics','immo-photos':'📸 Photos & Visites',
+    'immo-plans':'🗺️ Plans & Cadastre','immo-honoraires':'💵 Honoraires',
+    'immo-calculatrice':'🔢 Simulateur','immo-conformite':'🛡️ Conformité RGPD',
+    'immo-archives':'🗄️ Archives','immo-analytics':'📈 Statistiques',
+    'immo-marche':'🌍 Analyse marché','immo-marketing':'📣 Marketing',
+    'immo-siteweb':'🌐 Site web','immo-reseaux':'📱 Réseaux sociaux',
+    'immo-emailing':'✉️ Emailing','immo-equipe':'🧑‍💼 Équipe',
+    'immo-integrations':'🔌 Intégrations','immo-aide':'❓ Aide',
+    'arch-esquisse':'✏️ Esquisses','arch-plans':'📏 Plans 2D',
+    'arch-maquettes':'🧊 Maquettes 3D','arch-rendus':'🎨 Rendus',
+    'arch-notes':'📝 Notes de calcul','arch-thermique':'🌡️ RE2020',
+    'arch-structure':'🏗️ Structure','arch-permis':'📋 Permis',
+    'arch-declarations':'📑 Déclarations','arch-urbanisme':'🏛️ Urbanisme',
+    'arch-conformite':'🛡️ Conformité','arch-appels-offres':'📢 Appels d\'offres',
+    'arch-planning':'📆 Planning Gantt','arch-lots':'🧱 Lots',
+    'arch-entreprises':'🚧 Entreprises','arch-devis':'📊 Devis',
+    'arch-appels':'💰 Appels de fonds','arch-receptions':'✅ Réceptions',
+    'arch-opr':'🔍 OPR','arch-clients':'👥 Maîtres d\'ouvrage',
+    'arch-prospects':'🎯 Prospects','arch-partenaires':'🤝 Partenaires',
+    'arch-relances':'⏰ Relances','arch-materiaux':'🪵 Matériaux',
+    'arch-bibliotheque':'📚 Composants','arch-calculs':'🧮 Calculs',
+    'arch-diagnostics':'🔬 Diagnostics','arch-photos':'📸 Photos',
+    'arch-contrats':'📜 Contrats','arch-assurances':'🛡️ Assurances',
+    'arch-archives':'🗄️ Archives','arch-rentabilite':'📈 Rentabilité',
+    'arch-analytics':'📊 Stats','arch-temps':'⏱️ Suivi temps',
+    'arch-portfolio':'🎨 Portfolio','arch-siteweb':'🌐 Site',
+    'arch-reseaux':'📱 Réseaux','arch-emailing':'✉️ Emailing',
+    'arch-equipe':'🧑‍💼 Équipe','arch-integrations':'🔌 Intégrations',
+    'arch-aide':'❓ Aide'
   };
+  return { title: titles[pageId] || '📄 Module', subtitle:'Module métier — outils disponibles ci-dessous' };
+}
 
-  var statsHtml = '';
-  if (config.stats && config.stats.length) {
-    statsHtml = '<div class="grid-4">' + config.stats.map(function(s) {
-      return '<div class="stat-card">' +
-        '<div class="stat-label">' + s.label + '</div>' +
-        '<div class="stat-value">' + s.value + '</div>' +
-        '<div class="stat-sub ' + (s.neg?'neg':'') + '">' + (s.sub||'') + '</div>' +
-        '</div>';
-    }).join('') + '</div>';
-  }
-
-  var itemsHtml = '';
-  if (config.items && config.items.length) {
-    itemsHtml = '<div class="panel"><h2>📋 Éléments récents <span class="count">' + config.items.length + '</span></h2>' +
-      config.items.map(function(i) {
-        return '<div class="list-item" onclick="showToast(\'' + (i.icon||'📄') + '\',\'' + i.title + '\',\'' + (i.sub||'') + '\')">' +
-          '<div class="list-icon">' + (i.icon||'📄') + '</div>' +
-          '<div class="list-info"><strong>' + i.title + '</strong><small>' + (i.sub||'') + '</small></div>' +
-          '<span class="tag ' + (i.tagClass||color) + '">' + (i.tag||'Actif') + '</span>' +
-          '</div>';
-      }).join('') + '</div>';
-  }
-
-  var toolsHtml = '';
-  if (config.tools && config.tools.length) {
-    toolsHtml = '<div class="panel"><h2>🛠️ Outils disponibles</h2><div class="tool-grid">' +
-      config.tools.map(function(t) {
-        return '<div class="tool-card" onclick="showToast(\'' + t.icon + '\',\'' + t.name + '\',\'' + (t.desc||'') + '\')">' +
-          '<div class="tool-icon">' + t.icon + '</div>' +
-          '<div class="tool-name">' + t.name + '</div>' +
-          '<div class="tool-desc">' + (t.desc||'') + '</div>' +
-          '</div>';
-      }).join('') + '</div></div>';
-  }
-
-  c.innerHTML = '<div class="page-head">' +
-    '<div><h1>' + config.title + '</h1><p>' + config.subtitle + '</p></div>' +
-    '<div style="display:flex;gap:10px">' +
-    '<button class="btn btn-ghost" onclick="showToast(\'📥\',\'Export\',\'Données exportées\')">📥 Exporter</button>' +
-    '<button class="btn btn-primary" onclick="openCreateModal(\'' + config.title + '\')">+ Nouveau</button>' +
-    '</div></div>' + statsHtml + itemsHtml + toolsHtml;
+function renderGenericPage(config, color) {
+  var tools = ['➕ Ajouter','📤 Exporter','📊 Statistiques','🔔 Alertes','📁 Historique','⚙️ Paramètres'];
+  return '<div class="page-head"><div><h1>' + config.title + '</h1><p>' + config.subtitle + '</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="showToast(\'📥\',\'Export\',\'Données exportées\')">📥 Exporter</button>' +
+    '<button class="btn btn-primary" onclick="showToast(\'➕\',\'Ajouter\',\'Formulaire ouvert\')">+ Nouveau</button></div></div>' +
+    '<div class="panel"><h2>🛠️ Outils disponibles</h2><div class="tool-grid">' +
+    tools.map(function(t) {
+      var parts = t.split(' ');
+      var icon = parts[0];
+      var name = parts.slice(1).join(' ');
+      return '<div class="tool-card" onclick="showToast(\'' + icon + '\',\'' + name + '\',\'Module ' + config.title.replace(/[^\w\s]/g,'') + '\')">' +
+        '<div class="tool-icon">' + icon + '</div><div class="tool-name">' + name + '</div></div>';
+    }).join('') + '</div></div>' +
+    '<div class="panel"><h2>📈 Aperçu du module</h2>' +
+    '<div class="grid-4">' +
+    '<div class="stat-card"><div class="stat-label">Éléments</div><div class="stat-value">42</div><div class="stat-sub">+8 ce mois</div></div>' +
+    '<div class="stat-card"><div class="stat-label">En cours</div><div class="stat-value">18</div><div class="stat-sub">Actif</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Terminés</div><div class="stat-value">24</div><div class="stat-sub">+5</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Performance</div><div class="stat-value">94%</div><div class="stat-sub">+2pts</div></div>' +
+    '</div></div>';
 }
 
 /* ============================================================
-   DASHBOARDS
+   DASHBOARD IMMO
    ============================================================ */
 function dashboardImmo() {
-  return '<div class="page-head"><div><h1>🏢 Tableau de bord — Agence Immobilière</h1><p>Vue d\'ensemble de votre activité ce mois-ci</p></div>' +
-    '<div style="display:flex;gap:10px">' +
-    '<button class="btn btn-ghost" onclick="showToast(\'📊\',\'Rapport\',\'Rapport mensuel généré\')">📊 Rapport</button>' +
-    '<button class="btn btn-primary" onclick="openCreateModal(\'Bien immobilier\')">+ Ajouter un bien</button>' +
-    '</div></div>' +
+  var nbBiens = DB.biens.length;
+  var nbClients = DB.clients.length;
+  var nbTaches = DB.taches.filter(function(t) { return !t.fait; }).length;
+  var nbAgenda = DB.agenda.length;
+  return '<div class="page-head"><div><h1>🏢 Tableau de bord — Agence</h1><p>Vue d\'ensemble de votre activité</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="clearAllData()">🗑️ Vider</button>' +
+    '<button class="btn btn-ghost" onclick="loadDemo()">🎬 Démo</button>' +
+    '<button class="btn btn-primary" onclick="openAddBien()">+ Ajouter un bien</button></div></div>' +
     '<div class="grid-4">' +
-    '<div class="stat-card"><div class="stat-label">Biens actifs</div><div class="stat-value">142</div><div class="stat-sub">+12 ce mois</div></div>' +
-    '<div class="stat-card"><div class="stat-label">Mandats signés</div><div class="stat-value">28</div><div class="stat-sub">+5 cette semaine</div></div>' +
-    '<div class="stat-card"><div class="stat-label">Chiffre d\'affaires</div><div class="stat-value">284k€</div><div class="stat-sub">+12% vs M-1</div></div>' +
-    '<div class="stat-card"><div class="stat-label">Visites planifiées</div><div class="stat-value">47</div><div class="stat-sub">+8 aujourd\'hui</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Biens actifs</div><div class="stat-value">' + nbBiens + '</div><div class="stat-sub">' + (nbBiens>0?'+'+nbBiens:'Ajoutez-en') + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Clients</div><div class="stat-value">' + nbClients + '</div><div class="stat-sub">' + (nbClients>0?'CRM actif':'Aucun') + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">RDV aujourd\'hui</div><div class="stat-value">' + nbAgenda + '</div><div class="stat-sub">' + (nbAgenda>0?'Planifiés':'Libre') + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Tâches en cours</div><div class="stat-value">' + nbTaches + '</div><div class="stat-sub ' + (nbTaches>3?'neg':'') + '">' + (nbTaches>0?'À traiter':'Journée OK') + '</div></div>' +
     '</div>' +
-    '<div class="grid-2">' +
-    '<div class="panel"><h2>🔥 Activité récente</h2>' +
-    '<div class="list-item" onclick="showToast(\'🏠\',\'T3 Lyon 6e\',\'Mandat exclusif signé\')"><div class="list-icon">🏠</div><div class="list-info"><strong>Appartement T3 — Lyon 6e</strong><small>Mandat signé · 420 000 €</small></div><span class="tag blue">Vente</span></div>' +
-    '<div class="list-item" onclick="showToast(\'🤝\',\'Offre reçue\',\'380k€ pour Maison Écully\')"><div class="list-icon">🤝</div><div class="list-info"><strong>Maison 5P — Écully</strong><small>Offre à 380 000 €</small></div><span class="tag orange">Négociation</span></div>' +
-    '<div class="list-item" onclick="showToast(\'🔑\',\'Studio\',\'Nouveau bail signé\')"><div class="list-icon">🔑</div><div class="list-info"><strong>Studio meublé — Villeurbanne</strong><small>Nouveau locataire · 650 €/mois</small></div><span class="tag green">Location</span></div>' +
-    '<div class="list-item" onclick="showToast(\'📝\',\'Compromis\',\'Signature prévue vendredi\')"><div class="list-icon">📝</div><div class="list-info"><strong>Compromis — Villa Caluire</strong><small>Signature notaire vendredi 14h</small></div><span class="tag purple">Compromis</span></div>' +
-    '</div>' +
-    '<div class="panel"><h2>📅 Rendez-vous du jour</h2>' +
-    '<div class="list-item"><div class="list-icon">🕙</div><div class="list-info"><strong>10h00 — Visite T3 Lyon 6e</strong><small>M. & Mme Martin</small></div></div>' +
-    '<div class="list-item"><div class="list-icon">🕑</div><div class="list-info"><strong>14h00 — Estimation Maison</strong><small>M. Bernard — Villeurbanne</small></div></div>' +
-    '<div class="list-item"><div class="list-icon">🕓</div><div class="list-info"><strong>16h30 — Signature mandat</strong><small>Appartement T4 Lyon 3e</small></div></div>' +
-    '<div class="list-item"><div class="list-icon">🕕</div><div class="list-info"><strong>18h00 — Point équipe</strong><small>Visio hebdomadaire</small></div></div>' +
-    '</div></div>' +
+    (nbBiens === 0 && nbClients === 0 ? 
+      '<div class="panel"><div class="empty"><div class="empty-icon">📭</div><h3>Aucune donnée</h3><p>Cliquez sur 🎬 Démo pour charger un exemple, ou sur + Ajouter un bien pour commencer</p></div></div>'
+    :
+      '<div class="grid-2">' +
+      '<div class="panel"><h2>🔥 Derniers biens <span class="count">' + nbBiens + '</span></h2>' +
+      (DB.biens.slice(0,4).map(function(b) {
+        return '<div class="list-item" onclick="showToast(\'🏠\',\'' + b.titre.replace(/'/g,"\\'") + '\',\'' + b.prix + '\')">' +
+          '<div class="list-icon">🏠</div><div class="list-info"><strong>' + b.titre + '</strong><small>' + b.type + ' · ' + b.prix + '</small></div>' +
+          '<span class="tag blue">' + b.type + '</span></div>';
+      }).join('') || '<p style="color:var(--muted);font-size:13px">Aucun bien</p>') +
+      '</div>' +
+      '<div class="panel"><h2>📅 Agenda du jour</h2>' +
+      (DB.agenda.slice(0,4).map(function(a) {
+        return '<div class="list-item"><div class="list-icon">🕙</div><div class="list-info"><strong>' + a.heure + ' — ' + a.titre + '</strong><small>' + a.avec + '</small></div></div>';
+      }).join('') || '<p style="color:var(--muted);font-size:13px">Aucun rendez-vous</p>') +
+      '</div></div>'
+    ) +
     '<div class="panel"><h2>🛠️ Accès rapides</h2><div class="tool-grid">' +
-    '<div class="tool-card" onclick="navigate(\'immo-biens\',\'Biens immobiliers\')"><div class="tool-icon">🏠</div><div class="tool-name">Biens</div><div class="tool-desc">Gérer le catalogue</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'immo-clients\',\'Clients\')"><div class="tool-icon">👥</div><div class="tool-name">Clients</div><div class="tool-desc">CRM complet</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'immo-estimation\',\'Estimation\')"><div class="tool-icon">🧮</div><div class="tool-name">Estimer</div><div class="tool-desc">Prix de marché</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'immo-agenda\',\'Agenda\')"><div class="tool-icon">📅</div><div class="tool-name">Agenda</div><div class="tool-desc">Rendez-vous</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'immo-messagerie\',\'Messagerie\')"><div class="tool-icon">💬</div><div class="tool-name">Messages</div><div class="tool-desc">Communiquer</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'immo-finance\',\'Finance\')"><div class="tool-icon">💰</div><div class="tool-name">Finance</div><div class="tool-desc">Commissions</div></div>' +
-    '</div></div>';
-}
-
-function dashboardArch() {
-  return '<div class="page-head"><div><h1>📐 Tableau de bord — Cabinet d\'Architecture</h1><p>Vue d\'ensemble de vos projets et chantiers</p></div>' +
-    '<div style="display:flex;gap:10px">' +
-    '<button class="btn btn-ghost" onclick="showToast(\'📊\',\'Rapport\',\'Rapport projets généré\')">📊 Rapport</button>' +
-    '<button class="btn btn-primary" onclick="openCreateModal(\'Projet\')">+ Nouveau projet</button>' +
-    '</div></div>' +
-    '<div class="grid-4">' +
-    '<div class="stat-card"><div class="stat-label">Projets en cours</div><div class="stat-value">17</div><div class="stat-sub">+3 ce mois</div></div>' +
-    '<div class="stat-card"><div class="stat-label">Chantiers actifs</div><div class="stat-value">8</div><div class="stat-sub">2 en réception</div></div>' +
-    '<div class="stat-card"><div class="stat-label">Honoraires</div><div class="stat-value">127k€</div><div class="stat-sub">+18% vs M-1</div></div>' +
-    '<div class="stat-card"><div class="stat-label">Permis déposés</div><div class="stat-value">5</div><div class="stat-sub">2 accordés</div></div>' +
-    '</div>' +
-    '<div class="grid-2">' +
-    '<div class="panel"><h2>🔥 Projets récents</h2>' +
-    '<div class="list-item" onclick="showToast(\'🏗️\',\'Villa Annecy\',\'Permis déposé\')"><div class="list-icon">🏗️</div><div class="list-info"><strong>Villa contemporaine — Annecy</strong><small>210 m² · Permis déposé</small></div><span class="tag pink">Permis</span></div>' +
-    '<div class="list-item" onclick="showToast(\'🔨\',\'Loft Lyon 1er\',\'Chantier 65%\')"><div class="list-icon">🔨</div><div class="list-info"><strong>Rénovation Loft — Lyon 1er</strong><small>95 m² · Chantier 65%</small></div><span class="tag orange">Chantier</span></div>' +
-    '<div class="list-item" onclick="showToast(\'📐\',\'Maison Passivhaus\',\'Étude thermique\')"><div class="list-icon">📐</div><div class="list-info"><strong>Maison passive — Grenoble</strong><small>160 m² · Étude RE2020</small></div><span class="tag green">Conception</span></div>' +
-    '<div class="list-item" onclick="showToast(\'🎨\',\'Extension Bordeaux\',\'Rendu 3D\')"><div class="list-icon">🎨</div><div class="list-info"><strong>Extension — Bordeaux</strong><small>45 m² · Rendus en cours</small></div><span class="tag purple">Esquisse</span></div>' +
-    '</div>' +
-    '<div class="panel"><h2>📅 Agenda chantiers</h2>' +
-    '<div class="list-item"><div class="list-icon">🏗️</div><div class="list-info"><strong>09h00 — Visite chantier Loft</strong><small>Réunion artisans</small></div></div>' +
-    '<div class="list-item"><div class="list-icon">📐</div><div class="list-info"><strong>11h00 — Rendu client Villa</strong><small>Présentation 3D</small></div></div>' +
-    '<div class="list-item"><div class="list-icon">📋</div><div class="list-info"><strong>14h00 — Dépôt permis</strong><small>Mairie d\'Annecy</small></div></div>' +
-    '<div class="list-item"><div class="list-icon">🤝</div><div class="list-info"><strong>16h30 — RDV maître d\'ouvrage</strong><small>Nouveau projet</small></div></div>' +
-    '</div></div>' +
-    '<div class="panel"><h2>🛠️ Accès rapides</h2><div class="tool-grid">' +
-    '<div class="tool-card" onclick="navigate(\'arch-projets\',\'Projets\')"><div class="tool-icon">📐</div><div class="tool-name">Projets</div><div class="tool-desc">Dossiers en cours</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'arch-maquettes\',\'Maquettes 3D\')"><div class="tool-icon">🧊</div><div class="tool-name">Maquettes 3D</div><div class="tool-desc">BIM & rendus</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'arch-chantiers\',\'Chantiers\')"><div class="tool-icon">🏗️</div><div class="tool-name">Chantiers</div><div class="tool-desc">Suivi terrain</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'arch-permis\',\'Permis\')"><div class="tool-icon">📋</div><div class="tool-name">Permis</div><div class="tool-desc">Autorisations</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'arch-clients\',\'Clients\')"><div class="tool-icon">👥</div><div class="tool-name">Clients</div><div class="tool-desc">Maîtres d\'ouvrage</div></div>' +
-    '<div class="tool-card" onclick="navigate(\'arch-finance\',\'Finance\')"><div class="tool-icon">💰</div><div class="tool-name">Honoraires</div><div class="tool-desc">Facturation</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'immo-biens\')"><div class="tool-icon">🏠</div><div class="tool-name">Biens</div><div class="tool-desc">Catalogue</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'immo-clients\')"><div class="tool-icon">👥</div><div class="tool-name">Clients</div><div class="tool-desc">CRM</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'immo-agenda\')"><div class="tool-icon">📅</div><div class="tool-name">Agenda</div><div class="tool-desc">RDV</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'immo-taches\')"><div class="tool-icon">✅</div><div class="tool-name">Tâches</div><div class="tool-desc">À faire</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'immo-finance\')"><div class="tool-icon">💰</div><div class="tool-name">Finance</div><div class="tool-desc">Factures</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'immo-docs\')"><div class="tool-icon">📄</div><div class="tool-name">Documents</div><div class="tool-desc">Contrats</div></div>' +
     '</div></div>';
 }
 
 /* ============================================================
-   SWITCHER
+   DASHBOARD ARCH
    ============================================================ */
-document.querySelectorAll('.switch-btn').forEach(function(btn) {
-  btn.onclick = function() {
-    var mode = btn.getAttribute('data-mode');
-    if (mode === currentMode) return;
-    currentMode = mode;
-    document.body.className = mode + '-mode';
-    document.querySelectorAll('.switch-btn').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    currentPage = mode === 'immo' ? 'immo-dashboard' : 'arch-dashboard';
-    renderMenu();
-    renderPage(currentPage, '');
-    showToast(mode === 'immo' ? '🏢' : '📐',
-      mode === 'immo' ? 'Espace Immobilier' : 'Espace Architecte',
-      'Basculement effectué avec succès');
-  };
-});
+function dashboardArch() {
+  var nbProjets = DB.projets.length;
+  var nbChantiers = DB.chantiers.length;
+  return '<div class="page-head"><div><h1>📐 Tableau de bord — Architecte</h1><p>Vue d\'ensemble de vos projets</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="clearAllData()">🗑️ Vider</button>' +
+    '<button class="btn btn-ghost" onclick="loadDemo()">🎬 Démo</button>' +
+    '<button class="btn btn-primary" onclick="openAddProjet()">+ Nouveau projet</button></div></div>' +
+    '<div class="grid-4">' +
+    '<div class="stat-card"><div class="stat-label">Projets actifs</div><div class="stat-value">' + nbProjets + '</div><div class="stat-sub">' + (nbProjets>0?'En cours':'Aucun') + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Chantiers</div><div class="stat-value">' + nbChantiers + '</div><div class="stat-sub">Actifs</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Honoraires</div><div class="stat-value">127k€</div><div class="stat-sub">+18%</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Permis</div><div class="stat-value">5</div><div class="stat-sub">2 accordés</div></div>' +
+    '</div>' +
+    (nbProjets === 0 ?
+      '<div class="panel"><div class="empty"><div class="empty-icon">📭</div><h3>Aucun projet</h3><p>Cliquez sur 🎬 Démo ou + Nouveau projet</p></div></div>'
+    :
+      '<div class="grid-2">' +
+      '<div class="panel"><h2>🔥 Projets récents <span class="count">' + nbProjets + '</span></h2>' +
+      DB.projets.slice(0,4).map(function(p) {
+        return '<div class="list-item" onclick="showToast(\'📐\',\'' + p.titre.replace(/'/g,"\\'") + '\',\'' + p.statut + '\')">' +
+          '<div class="list-icon">📐</div><div class="list-info"><strong>' + p.titre + '</strong><small>' + p.surface + ' · ' + p.statut + '</small></div>' +
+          '<span class="tag pink">' + p.statut + '</span></div>';
+      }).join('') +
+      '</div>' +
+      '<div class="panel"><h2>🏗️ Chantiers en cours</h2>' +
+      (DB.chantiers.map(function(c) {
+        return '<div class="list-item"><div class="list-icon">🏗️</div><div class="list-info"><strong>' + c.titre + '</strong><small>Avancement ' + c.avancement + ' · Fin ' + c.fin + '</small></div><span class="tag orange">' + c.statut + '</span></div>';
+      }).join('') || '<p style="color:var(--muted);font-size:13px">Aucun chantier</p>') +
+      '</div></div>'
+    ) +
+    '<div class="panel"><h2>🛠️ Accès rapides</h2><div class="tool-grid">' +
+    '<div class="tool-card" onclick="navigate(\'arch-projets\')"><div class="tool-icon">📐</div><div class="tool-name">Projets</div><div class="tool-desc">Dossiers</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'arch-chantiers\')"><div class="tool-icon">🏗️</div><div class="tool-name">Chantiers</div><div class="tool-desc">Suivi</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'arch-permis\')"><div class="tool-icon">📋</div><div class="tool-name">Permis</div><div class="tool-desc">Autorisations</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'arch-clients\')"><div class="tool-icon">👥</div><div class="tool-name">Clients</div><div class="tool-desc">Maîtres</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'arch-taches\')"><div class="tool-icon">✅</div><div class="tool-name">Tâches</div><div class="tool-desc">À faire</div></div>' +
+    '<div class="tool-card" onclick="navigate(\'arch-finance\')"><div class="tool-icon">💰</div><div class="tool-name">Honoraires</div><div class="tool-desc">Facturation</div></div>' +
+    '</div></div>';
+}
+
+/* ============================================================
+   PAGE BIENS (fonctionnelle)
+   ============================================================ */
+function pageBiens() {
+  var list = DB.biens.filter(function(b) {
+    if (!searchTerm) return true;
+    return (b.titre + b.adresse + b.type).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+  });
+  return '<div class="page-head"><div><h1>🏠 Biens immobiliers</h1><p>' + DB.biens.length + ' bien(s) dans le catalogue</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="showToast(\'📥\',\'Export\',\'Catalogue exporté\')">📥 Exporter</button>' +
+    '<button class="btn btn-primary" onclick="openAddBien()">+ Ajouter un bien</button></div></div>' +
+    '<div class="panel"><h2>📋 Liste des biens <span class="count">' + list.length + '</span></h2>' +
+    (list.length === 0 ?
+      '<div class="empty"><div class="empty-icon">🏠</div><h3>Aucun bien</h3><p>Ajoutez votre premier bien</p></div>'
+    :
+      list.map(function(b) {
+        var tagClass = b.type === 'Vente' ? 'blue' : b.type === 'Location' ? 'green' : 'orange';
+        return '<div class="list-item" onclick="openViewBien(' + b.id + ')">' +
+          '<div class="list-icon">🏠</div>' +
+          '<div class="list-info"><strong>' + b.titre + '</strong><small>' + b.surface + ' · ' + b.adresse + '</small></div>' +
+          '<span class="tag ' + tagClass + '">' + b.prix + '</span>' +
+          '<div class="list-actions"><button onclick="event.stopPropagation();openEditBien(' + b.id + ')">✏️</button>' +
+          '<button onclick="event.stopPropagation();deleteBien(' + b.id + ')">🗑️</button></div>' +
+          '</div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddBien() {
+  showModal('➕ Ajouter un bien',
+    '<div class="form-group"><label>Titre</label><input id="f_titre" placeholder="Ex: Appartement T3 Lyon 6e"></div>' +
+    '<div class="form-group"><label>Type</label><select id="f_type"><option>Vente</option><option>Location</option></select></div>' +
+    '<div class="form-group"><label>Prix</label><input id="f_prix" placeholder="Ex: 420 000 €"></div>' +
+    '<div class="form-group"><label>Surface</label><input id="f_surface" placeholder="Ex: 72 m²"></div>' +
+    '<div class="form-group"><label>Adresse</label><input id="f_adresse" placeholder="Ex: 12 rue Duquesne, Lyon 6e"></div>' +
+    '<div class="form-group"><label>Description</label><textarea id="f_desc" rows="3" placeholder="Détails..."></textarea></div>' +
+    '<div class="form-group"><label>Statut</label><select id="f_statut"><option>Disponible</option><option>Sous offre</option><option>Compromis</option><option>Vendu</option><option>Loué</option></select></div>',
+    function() {
+      var b = {
+        id: genId(),
+        titre: document.getElementById('f_titre').value || 'Sans titre',
+        type: document.getElementById('f_type').value,
+        prix: document.getElementById('f_prix').value || '—',
+        surface: document.getElementById('f_surface').value || '—',
+        adresse: document.getElementById('f_adresse').value || '—',
+        desc: document.getElementById('f_desc').value,
+        statut: document.getElementById('f_statut').value
+      };
+      DB.biens.push(b);
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Bien ajouté', b.titre);
+    });
+}
+
+function openEditBien(id) {
+  var b = DB.biens.filter(function(x) { return x.id === id; })[0];
+  if (!b) return;
+  showModal('✏️ Modifier — ' + b.titre,
+    '<div class="form-group"><label>Titre</label><input id="f_titre" value="' + b.titre.replace(/"/g,'&quot;') + '"></div>' +
+    '<div class="form-group"><label>Type</label><select id="f_type"><option' + (b.type==='Vente'?' selected':'') + '>Vente</option><option' + (b.type==='Location'?' selected':'') + '>Location</option></select></div>' +
+    '<div class="form-group"><label>Prix</label><input id="f_prix" value="' + b.prix + '"></div>' +
+    '<div class="form-group"><label>Surface</label><input id="f_surface" value="' + b.surface + '"></div>' +
+    '<div class="form-group"><label>Adresse</label><input id="f_adresse" value="' + b.adresse.replace(/"/g,'&quot;') + '"></div>' +
+    '<div class="form-group"><label>Description</label><textarea id="f_desc" rows="3">' + (b.desc||'') + '</textarea></div>' +
+    '<div class="form-group"><label>Statut</label><select id="f_statut">' +
+      ['Disponible','Sous offre','Compromis','Vendu','Loué'].map(function(s) {
+        return '<option' + (b.statut===s?' selected':'') + '>' + s + '</option>';
+      }).join('') + '</select></div>',
+    function() {
+      b.titre = document.getElementById('f_titre').value;
+      b.type = document.getElementById('f_type').value;
+      b.prix = document.getElementById('f_prix').value;
+      b.surface = document.getElementById('f_surface').value;
+      b.adresse = document.getElementById('f_adresse').value;
+      b.desc = document.getElementById('f_desc').value;
+      b.statut = document.getElementById('f_statut').value;
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Bien modifié', b.titre);
+    });
+}
+
+function openViewBien(id) {
+  var b = DB.biens.filter(function(x) { return x.id === id; })[0];
+  if (!b) return;
+  showModal('🏠 ' + b.titre,
+    '<div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">' +
+    '<div><strong>Type :</strong> ' + b.type + '</div>' +
+    '<div><strong>Prix :</strong> ' + b.prix + '</div>' +
+    '<div><strong>Surface :</strong> ' + b.surface + '</div>' +
+    '<div><strong>Adresse :</strong> ' + b.adresse + '</div>' +
+    '<div><strong>Statut :</strong> ' + b.statut + '</div>' +
+    '<div><strong>Description :</strong> ' + (b.desc||'—') + '</div></div>',
+    null, true);
+}
+
+function deleteBien(id) {
+  if (!confirm('Supprimer ce bien ?')) return;
+  DB.biens = DB.biens.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimé', 'Le bien a été supprimé');
+}
+
+/* ============================================================
+   PAGE CLIENTS
+   ============================================================ */
+function pageClients() {
+  var list = DB.clients.filter(function(c) {
+    if (!searchTerm) return true;
+    return (c.nom + c.email + c.type).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+  });
+  return '<div class="page-head"><div><h1>👥 Clients & Prospects</h1><p>' + DB.clients.length + ' contact(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="showToast(\'📥\',\'Export\',\'Contacts exportés\')">📥 Exporter</button>' +
+    '<button class="btn btn-primary" onclick="openAddClient()">+ Nouveau client</button></div></div>' +
+    '<div class="panel"><h2>📋 Contacts <span class="count">' + list.length + '</span></h2>' +
+    (list.length === 0 ?
+      '<div class="empty"><div class="empty-icon">👥</div><h3>Aucun client</h3><p>Ajoutez votre premier contact</p></div>'
+    :
+      list.map(function(c) {
+        return '<div class="list-item">' +
+          '<div class="list-icon">👤</div>' +
+          '<div class="list-info"><strong>' + c.nom + '</strong><small>' + c.type + ' · ' + (c.email||'—') + ' · ' + (c.tel||'—') + '</small></div>' +
+          '<span class="tag blue">' + c.type + '</span>' +
+          '<div class="list-actions"><button onclick="openEditClient(' + c.id + ')">✏️</button>' +
+          '<button onclick="deleteClient(' + c.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddClient() {
+  showModal('➕ Nouveau client',
+    '<div class="form-group"><label>Nom</label><input id="c_nom" placeholder="Ex: M. Martin"></div>' +
+    '<div class="form-group"><label>Type</label><select id="c_type"><option>Acheteur</option><option>Vendeur</option><option>Investisseur</option><option>Locataire</option></select></div>' +
+    '<div class="form-group"><label>Email</label><input id="c_email" placeholder="exemple@email.fr"></div>' +
+    '<div class="form-group"><label>Téléphone</label><input id="c_tel" placeholder="06 12 34 56 78"></div>' +
+    '<div class="form-group"><label>Budget</label><input id="c_budget" placeholder="Ex: 450 000 €"></div>' +
+    '<div class="form-group"><label>Notes</label><textarea id="c_notes" rows="3"></textarea></div>',
+    function() {
+      var c = {
+        id: genId(),
+        nom: document.getElementById('c_nom').value || 'Sans nom',
+        type: document.getElementById('c_type').value,
+        email: document.getElementById('c_email').value,
+        tel: document.getElementById('c_tel').value,
+        budget: document.getElementById('c_budget').value,
+        notes: document.getElementById('c_notes').value
+      };
+      DB.clients.push(c);
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Client ajouté', c.nom);
+    });
+}
+
+function openEditClient(id) {
+  var c = DB.clients.filter(function(x) { return x.id === id; })[0];
+  if (!c) return;
+  showModal('✏️ Modifier — ' + c.nom,
+    '<div class="form-group"><label>Nom</label><input id="c_nom" value="' + c.nom.replace(/"/g,'&quot;') + '"></div>' +
+    '<div class="form-group"><label>Type</label><select id="c_type">' +
+      ['Acheteur','Vendeur','Investisseur','Locataire'].map(function(t) {
+        return '<option' + (c.type===t?' selected':'') + '>' + t + '</option>';
+      }).join('') + '</select></div>' +
+    '<div class="form-group"><label>Email</label><input id="c_email" value="' + (c.email||'') + '"></div>' +
+    '<div class="form-group"><label>Téléphone</label><input id="c_tel" value="' + (c.tel||'') + '"></div>' +
+    '<div class="form-group"><label>Budget</label><input id="c_budget" value="' + (c.budget||'') + '"></div>' +
+    '<div class="form-group"><label>Notes</label><textarea id="c_notes" rows="3">' + (c.notes||'') + '</textarea></div>',
+    function() {
+      c.nom = document.getElementById('c_nom').value;
+      c.type = document.getElementById('c_type').value;
+      c.email = document.getElementById('c_email').value;
+      c.tel = document.getElementById('c_tel').value;
+      c.budget = document.getElementById('c_budget').value;
+      c.notes = document.getElementById('c_notes').value;
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Client modifié', c.nom);
+    });
+}
+
+function deleteClient(id) {
+  if (!confirm('Supprimer ce client ?')) return;
+  DB.clients = DB.clients.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimé', 'Le client a été supprimé');
+}
+
+/* ============================================================
+   PAGE PROJETS
+   ============================================================ */
+function pageProjets() {
+  var list = DB.projets.filter(function(p) {
+    if (!searchTerm) return true;
+    return (p.titre + p.client + p.statut).toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+  });
+  return '<div class="page-head"><div><h1>📐 Projets architecturaux</h1><p>' + DB.projets.length + ' projet(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="showToast(\'📥\',\'Export\',\'Projets exportés\')">📥 Exporter</button>' +
+    '<button class="btn btn-primary" onclick="openAddProjet()">+ Nouveau projet</button></div></div>' +
+    '<div class="panel"><h2>📋 Liste des projets <span class="count">' + list.length + '</span></h2>' +
+    (list.length === 0 ?
+      '<div class="empty"><div class="empty-icon">📐</div><h3>Aucun projet</h3><p>Ajoutez votre premier projet</p></div>'
+    :
+      list.map(function(p) {
+        return '<div class="list-item">' +
+          '<div class="list-icon">📐</div>' +
+          '<div class="list-info"><strong>' + p.titre + '</strong><small>' + p.client + ' · ' + p.surface + ' · ' + p.budget + '</small></div>' +
+          '<span class="tag pink">' + p.statut + '</span>' +
+          '<div class="list-actions"><button onclick="openEditProjet(' + p.id + ')">✏️</button>' +
+          '<button onclick="deleteProjet(' + p.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddProjet() {
+  showModal('➕ Nouveau projet',
+    '<div class="form-group"><label>Titre</label><input id="p_titre" placeholder="Ex: Villa contemporaine Annecy"></div>' +
+    '<div class="form-group"><label>Client</label><input id="p_client" placeholder="Nom du maître d\'ouvrage"></div>' +
+    '<div class="form-group"><label>Surface</label><input id="p_surface" placeholder="Ex: 210 m²"></div>' +
+    '<div class="form-group"><label>Budget</label><input id="p_budget" placeholder="Ex: 680 000 €"></div>' +
+    '<div class="form-group"><label>Statut</label><select id="p_statut"><option>Esquisse</option><option>Conception</option><option>Permis déposé</option><option>Chantier</option><option>Livré</option></select></div>',
+    function() {
+      var p = {
+        id: genId(),
+        titre: document.getElementById('p_titre').value || 'Sans titre',
+        client: document.getElementById('p_client').value || '—',
+        surface: document.getElementById('p_surface').value || '—',
+        budget: document.getElementById('p_budget').value || '—',
+        statut: document.getElementById('p_statut').value,
+        avancement: '0%'
+      };
+      DB.projets.push(p);
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Projet ajouté', p.titre);
+    });
+}
+
+function openEditProjet(id) {
+  var p = DB.projets.filter(function(x) { return x.id === id; })[0];
+  if (!p) return;
+  showModal('✏️ Modifier — ' + p.titre,
+    '<div class="form-group"><label>Titre</label><input id="p_titre" value="' + p.titre.replace(/"/g,'&quot;') + '"></div>' +
+    '<div class="form-group"><label>Client</label><input id="p_client" value="' + p.client + '"></div>' +
+    '<div class="form-group"><label>Surface</label><input id="p_surface" value="' + p.surface + '"></div>' +
+    '<div class="form-group"><label>Budget</label><input id="p_budget" value="' + p.budget + '"></div>' +
+    '<div class="form-group"><label>Statut</label><select id="p_statut">' +
+      ['Esquisse','Conception','Permis déposé','Chantier','Livré'].map(function(s) {
+        return '<option' + (p.statut===s?' selected':'') + '>' + s + '</option>';
+      }).join('') + '</select></div>',
+    function() {
+      p.titre = document.getElementById('p_titre').value;
+      p.client = document.getElementById('p_client').value;
+      p.surface = document.getElementById('p_surface').value;
+      p.budget = document.getElementById('p_budget').value;
+      p.statut = document.getElementById('p_statut').value;
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Projet modifié', p.titre);
+    });
+}
+
+function deleteProjet(id) {
+  if (!confirm('Supprimer ce projet ?')) return;
+  DB.projets = DB.projets.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimé', 'Le projet a été supprimé');
+}
+
+/* ============================================================
+   PAGE CHANTIERS
+   ============================================================ */
+function pageChantiers() {
+  return '<div class="page-head"><div><h1>🏗️ Chantiers en cours</h1><p>' + DB.chantiers.length + ' chantier(s) actif(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openAddChantier()">+ Nouveau chantier</button></div></div>' +
+    '<div class="panel"><h2>📋 Liste <span class="count">' + DB.chantiers.length + '</span></h2>' +
+    (DB.chantiers.length === 0 ?
+      '<div class="empty"><div class="empty-icon">🏗️</div><h3>Aucun chantier</h3><p>Chargez la démo ou ajoutez-en un</p></div>'
+    :
+      DB.chantiers.map(function(c) {
+        return '<div class="list-item">' +
+          '<div class="list-icon">🏗️</div>' +
+          '<div class="list-info"><strong>' + c.titre + '</strong><small>' + c.entreprise + ' · Avancement ' + c.avancement + ' · Fin ' + c.fin + '</small></div>' +
+          '<span class="tag orange">' + c.statut + '</span>' +
+          '<div class="list-actions"><button onclick="deleteChantier(' + c.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddChantier() {
+  showModal('➕ Nouveau chantier',
+    '<div class="form-group"><label>Titre</label><input id="ch_titre" placeholder="Ex: Villa Annecy"></div>' +
+    '<div class="form-group"><label>Client</label><input id="ch_client" placeholder="Maître d\'ouvrage"></div>' +
+    '<div class="form-group"><label>Entreprise</label><input id="ch_entreprise" placeholder="Ex: BTP Lyon SAS"></div>' +
+    '<div class="form-group"><label>Budget</label><input id="ch_budget" placeholder="Ex: 680 000 €"></div>' +
+    '<div class="form-group"><label>Fin prévue</label><input id="ch_fin" placeholder="Ex: 30/04/2025"></div>',
+    function() {
+      DB.chantiers.push({
+        id: genId(),
+        titre: document.getElementById('ch_titre').value || 'Chantier',
+        client: document.getElementById('ch_client').value || '—',
+        entreprise: document.getElementById('ch_entreprise').value || '—',
+        budget: document.getElementById('ch_budget').value || '—',
+        fin: document.getElementById('ch_fin').value || '—',
+        avancement: '0%',
+        statut: 'En cours'
+      });
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Chantier ajouté', 'Nouveau chantier créé');
+    });
+}
+
+function deleteChantier(id) {
+  if (!confirm('Supprimer ce chantier ?')) return;
+  DB.chantiers = DB.chantiers.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimé', 'Chantier supprimé');
+}
+
+/* ============================================================
+   PAGE TÂCHES
+   ============================================================ */
+function pageTaches() {
+  return '<div class="page-head"><div><h1>✅ Tâches & Projets</h1><p>' + DB.taches.filter(function(t){return !t.fait;}).length + ' tâche(s) en cours</p></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openAddTache()">+ Nouvelle tâche</button></div></div>' +
+    '<div class="panel"><h2>📋 Toutes les tâches <span class="count">' + DB.taches.length + '</span></h2>' +
+    (DB.taches.length === 0 ?
+      '<div class="empty"><div class="empty-icon">✅</div><h3>Aucune tâche</h3><p>Ajoutez votre première tâche</p></div>'
+    :
+      DB.taches.map(function(t) {
+        return '<div class="list-item" style="' + (t.fait?'opacity:.5':'') + '">' +
+          '<div class="list-icon">' + (t.fait?'✅':'⏳') + '</div>' +
+          '<div class="list-info"><strong style="' + (t.fait?'text-decoration:line-through':'') + '">' + t.titre + '</strong><small>' + (t.desc||'') + ' · ' + t.date + '</small></div>' +
+          '<span class="tag ' + (t.priorite==='Urgente'?'red':'blue') + '">' + t.priorite + '</span>' +
+          '<div class="list-actions"><button onclick="toggleTache(' + t.id + ')">' + (t.fait?'↩️':'✅') + '</button>' +
+          '<button onclick="deleteTache(' + t.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddTache() {
+  showModal('➕ Nouvelle tâche',
+    '<div class="form-group"><label>Titre</label><input id="t_titre" placeholder="Ex: Rappeler M. Martin"></div>' +
+    '<div class="form-group"><label>Description</label><input id="t_desc" placeholder="Détails..."></div>' +
+    '<div class="form-group"><label>Échéance</label><input id="t_date" placeholder="Ex: Aujourd\'hui"></div>' +
+    '<div class="form-group"><label>Priorité</label><select id="t_priorite"><option>Normale</option><option>Urgente</option><option>Basse</option></select></div>',
+    function() {
+      DB.taches.push({
+        id: genId(),
+        titre: document.getElementById('t_titre').value || 'Tâche',
+        desc: document.getElementById('t_desc').value,
+        date: document.getElementById('t_date').value || 'Aujourd\'hui',
+        priorite: document.getElementById('t_priorite').value,
+        fait: false
+      });
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Tâche ajoutée', 'Nouvelle tâche créée');
+    });
+}
+
+function toggleTache(id) {
+  var t = DB.taches.filter(function(x) { return x.id === id; })[0];
+  if (!t) return;
+  t.fait = !t.fait;
+  saveDB();
+  renderPage(currentPage);
+  showToast(t.fait?'✅':'↩️', t.fait?'Terminée':'Réouverte', t.titre);
+}
+
+function deleteTache(id) {
+  DB.taches = DB.taches.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimée', 'Tâche supprimée');
+}
+
+/* ============================================================
+   PAGE AGENDA
+   ============================================================ */
+function pageAgenda() {
+  return '<div class="page-head"><div><h1>📅 Agenda</h1><p>' + DB.agenda.length + ' rendez-vous</p></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openAddAgenda()">+ Nouveau RDV</button></div></div>' +
+    '<div class="panel"><h2>📋 Rendez-vous <span class="count">' + DB.agenda.length + '</span></h2>' +
+    (DB.agenda.length === 0 ?
+      '<div class="empty"><div class="empty-icon">📅</div><h3>Aucun rendez-vous</h3><p>Planifiez votre premier RDV</p></div>'
+    :
+      DB.agenda.map(function(a) {
+        return '<div class="list-item">' +
+          '<div class="list-icon">🕙</div>' +
+          '<div class="list-info"><strong>' + a.heure + ' — ' + a.titre + '</strong><small>' + a.avec + ' · ' + a.lieu + '</small></div>' +
+          '<span class="tag blue">' + a.date + '</span>' +
+          '<div class="list-actions"><button onclick="deleteAgenda(' + a.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddAgenda() {
+  showModal('➕ Nouveau rendez-vous',
+    '<div class="form-group"><label>Titre</label><input id="a_titre" placeholder="Ex: Visite T3"></div>' +
+    '<div class="form-group"><label>Heure</label><input id="a_heure" placeholder="Ex: 14h00"></div>' +
+    '<div class="form-group"><label>Date</label><input id="a_date" placeholder="Ex: Aujourd\'hui"></div>' +
+    '<div class="form-group"><label>Avec</label><input id="a_avec" placeholder="Ex: M. Martin"></div>' +
+    '<div class="form-group"><label>Lieu</label><input id="a_lieu" placeholder="Ex: Agence / Visio"></div>',
+    function() {
+      DB.agenda.push({
+        id: genId(),
+        titre: document.getElementById('a_titre').value || 'RDV',
+        heure: document.getElementById('a_heure').value || '—',
+        date: document.getElementById('a_date').value || 'Aujourd\'hui',
+        avec: document.getElementById('a_avec').value || '—',
+        lieu: document.getElementById('a_lieu').value || '—'
+      });
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'RDV ajouté', 'Rendez-vous planifié');
+    });
+}
+
+function deleteAgenda(id) {
+  DB.agenda = DB.agenda.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimé', 'RDV supprimé');
+}
+
+/* ============================================================
+   PAGE MESSAGERIE
+   ============================================================ */
+function pageMessagerie() {
+  return '<div class="page-head"><div><h1>💬 Messagerie</h1><p>' + DB.messages.length + ' conversation(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openNewMessage()">+ Nouveau message</button></div></div>' +
+    '<div class="panel"><h2>📥 Boîte de réception <span class="count">' + DB.messages.length + '</span></h2>' +
+    (DB.messages.length === 0 ?
+      '<div class="empty"><div class="empty-icon">💬</div><h3>Aucun message</h3><p>Votre messagerie est vide</p></div>'
+    :
+      DB.messages.map(function(m) {
+        return '<div class="list-item" onclick="openMessage(' + m.id + ')">' +
+          '<div class="list-icon">💬</div>' +
+          '<div class="list-info"><strong>' + m.de + '</strong><small>' + m.texte + '</small></div>' +
+          '<span class="tag ' + (m.lu?'green':'red') + '">' + m.date + '</span></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openMessage(id) {
+  var m = DB.messages.filter(function(x) { return x.id === id; })[0];
+  if (!m) return;
+  m.lu = true;
+  saveDB();
+  showModal('💬 ' + m.de,
+    '<div style="padding:14px;background:var(--bg);border-radius:10px;margin-bottom:14px;font-size:13.5px">' + m.texte + '</div>' +
+    '<div class="form-group"><label>Répondre</label><textarea rows="3" placeholder="Votre réponse..."></textarea></div>',
+    function() {
+      closeModal();
+      showToast('📤', 'Message envoyé', 'À ' + m.de);
+    });
+}
+
+function openNewMessage() {
+  showModal('✉️ Nouveau message',
+    '<div class="form-group"><label>Destinataire</label><input id="m_dest" placeholder="Nom / Email"></div>' +
+    '<div class="form-group"><label>Message</label><textarea id="m_texte" rows="4"></textarea></div>',
+    function() {
+      DB.messages.push({
+        id: genId(),
+        de: 'Moi',
+        texte: document.getElementById('m_texte').value || '(vide)',
+        date: new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),
+        lu: true
+      });
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('📤', 'Message envoyé', 'Destinataire: ' + document.getElementById('m_dest').value);
+    });
+}
+
+/* ============================================================
+   PAGE DOCUMENTS
+   ============================================================ */
+function pageDocuments() {
+  return '<div class="page-head"><div><h1>📄 Documents & Contrats</h1><p>' + DB.documents.length + ' document(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openAddDoc()">+ Nouveau document</button></div></div>' +
+    '<div class="panel"><h2>📁 Mes documents <span class="count">' + DB.documents.length + '</span></h2>' +
+    (DB.documents.length === 0 ?
+      '<div class="empty"><div class="empty-icon">📄</div><h3>Aucun document</h3><p>Ajoutez votre premier document</p></div>'
+    :
+      DB.documents.map(function(d) {
+        return '<div class="list-item">' +
+          '<div class="list-icon">📄</div>' +
+          '<div class="list-info"><strong>' + d.titre + '</strong><small>' + d.type + ' · ' + d.date + ' · ' + d.taille + '</small></div>' +
+          '<span class="tag blue">' + d.type + '</span>' +
+          '<div class="list-actions"><button onclick="downloadDoc(' + d.id + ')">⬇️</button>' +
+          '<button onclick="deleteDoc(' + d.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function openAddDoc() {
+  showModal('➕ Nouveau document',
+    '<div class="form-group"><label>Titre</label><input id="d_titre" placeholder="Ex: Mandat exclusif T3.pdf"></div>' +
+    '<div class="form-group"><label>Type</label><select id="d_type"><option>Mandat</option><option>Compromis</option><option>Bail</option><option>Diagnostic</option><option>Contrat</option><option>Facture</option></select></div>' +
+    '<div class="form-group"><label>Notes</label><textarea id="d_notes" rows="2"></textarea></div>',
+    function() {
+      DB.documents.push({
+        id: genId(),
+        titre: document.getElementById('d_titre').value || 'Document.pdf',
+        type: document.getElementById('d_type').value,
+        date: new Date().toLocaleDateString('fr-FR'),
+        taille: (Math.floor(Math.random()*500)+100) + ' Ko'
+      });
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Document ajouté', 'Fichier enregistré');
+    });
+}
+
+function downloadDoc(id) {
+  var d = DB.documents.filter(function(x) { return x.id === id; })[0];
+  showToast('⬇️', 'Téléchargement', d.titre + ' en cours...');
+}
+
+function deleteDoc(id) {
+  DB.documents = DB.documents.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimé', 'Document supprimé');
+}
+
+/* ============================================================
+   PAGE FINANCE
+   ============================================================ */
+function pageFinance() {
+  return '<div class="page-head"><div><h1>💰 Comptabilité & Factures</h1><p>' + DB.factures.length + ' facture(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openAddFacture()">+ Nouvelle facture</button></div></div>' +
+    '<div class="grid-4">' +
+    '<div class="stat-card"><div class="stat-label">CA du mois</div><div class="stat-value">' + calculCA() + '</div><div class="stat-sub">+12%</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Payées</div><div class="stat-value">' + DB.factures.filter(function(f){return f.statut==='Payée';}).length + '</div><div class="stat-sub">Encaissées</div></div>' +
+    '<div class="stat-card"><div class="stat-label">En attente</div><div class="stat-value">' + DB.factures.filter(function(f){return f.statut!=='Payée';}).length + '</div><div class="stat-sub neg">À relancer</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Total factures</div><div class="stat-value">' + DB.factures.length + '</div><div class="stat-sub">Ce mois</div></div>' +
+    '</div>' +
+    '<div class="panel"><h2>📋 Factures <span class="count">' + DB.factures.length + '</span></h2>' +
+    (DB.factures.length === 0 ?
+      '<div class="empty"><div class="empty-icon">💰</div><h3>Aucune facture</h3><p>Créez votre première facture</p></div>'
+    :
+      DB.factures.map(function(f) {
+        return '<div class="list-item">' +
+          '<div class="list-icon">📄</div>' +
+          '<div class="list-info"><strong>Facture n°' + f.numero + ' — ' + f.client + '</strong><small>' + f.date + '</small></div>' +
+          '<span class="tag ' + (f.statut==='Payée'?'green':'orange') + '">' + f.montant + '</span>' +
+          '<div class="list-actions"><button onclick="toggleFacture(' + f.id + ')">' + (f.statut==='Payée'?'↩️':'✅') + '</button>' +
+          '<button onclick="deleteFacture(' + f.id + ')">🗑️</button></div></div>';
+      }).join('')
+    ) + '</div>';
+}
+
+function calculCA() {
+  var total = 0;
+  DB.factures.forEach(function(f) {
+    var m = f.montant.replace(/[^\d]/g,'');
+    if (m) total += parseInt(m);
+  });
+  return total.toLocaleString('fr-FR') + ' €';
+}
+
+function openAddFacture() {
+  showModal('➕ Nouvelle facture',
+    '<div class="form-group"><label>Client</label><input id="fa_client" placeholder="Ex: SCI Bellevue"></div>' +
+    '<div class="form-group"><label>Montant</label><input id="fa_montant" placeholder="Ex: 8 400 €"></div>' +
+    '<div class="form-group"><label>Statut</label><select id="fa_statut"><option>En attente</option><option>Payée</option></select></div>',
+    function() {
+      var num = '2025-' + String(Math.floor(Math.random()*9000)+1000);
+      DB.factures.push({
+        id: genId(),
+        numero: num,
+        client: document.getElementById('fa_client').value || '—',
+        montant: document.getElementById('fa_montant').value || '0 €',
+        statut: document.getElementById('fa_statut').value,
+        date: new Date().toLocaleDateString('fr-FR')
+      });
+      saveDB();
+      closeModal();
+      renderPage(currentPage);
+      showToast('✅', 'Facture créée', 'Facture n°' + num);
+    });
+}
+
+function toggleFacture(id) {
+  var f = DB.factures.filter(function(x) { return x.id === id; })[0];
+  if (!f) return;
+  f.statut = f.statut === 'Payée' ? 'En attente' : 'Payée';
+  saveDB();
+  renderPage(currentPage);
+  showToast(f.statut==='Payée'?'✅':'↩️', f.statut, 'Facture n°' + f.numero);
+}
+
+function deleteFacture(id) {
+  DB.factures = DB.factures.filter(function(x) { return x.id !== id; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('🗑️', 'Supprimée', 'Facture supprimée');
+}
+
+/* ============================================================
+   PAGE ESTIMATION (outil calcul)
+   ============================================================ */
+function pageEstimation() {
+  return '<div class="page-head"><div><h1>🧮 Estimation immobilière</h1><p>Calculateur de prix au m²</p></div></div>' +
+    '<div class="panel"><h2>📊 Estimation rapide</h2>' +
+    '<div class="form-group"><label>Surface (m²)</label><input id="est_surface" type="number" placeholder="Ex: 72"></div>' +
+    '<div class="form-group"><label>Prix moyen au m² (€)</label><input id="est_prix" type="number" value="4850"></div>' +
+    '<div class="form-group"><label>État du bien</label><select id="est_etat"><option value="1">Bon état</option><option value="1.15">Neuf / rénové</option><option value="0.85">À rafraîchir</option><option value="0.7">À rénover</option></select></div>' +
+    '<button class="btn btn-primary" onclick="calculEstimation()" style="width:100%;justify-content:center">🧮 Calculer l\'estimation</button>' +
+    '<div id="est_result" style="margin-top:16px"></div></div>';
+}
+
+function calculEstimation() {
+  var s = parseFloat(document.getElementById('est_surface').value);
+  var p = parseFloat(document.getElementById('est_prix').value);
+  var coef = parseFloat(document.getElementById('est_etat').value);
+  if (!s || !p) { showToast('⚠️', 'Erreur', 'Remplissez tous les champs'); return; }
+  var estimation = s * p * coef;
+  var mini = estimation * 0.92;
+  var maxi = estimation * 1.08;
+  document.getElementById('est_result').innerHTML = 
+    '<div class="stat-card"><div class="stat-label">Estimation</div>' +
+    '<div class="stat-value">' + Math.round(estimation).toLocaleString('fr-FR') + ' €</div>' +
+    '<div class="stat-sub">Fourchette : ' + Math.round(mini).toLocaleString('fr-FR') + ' € — ' + Math.round(maxi).toLocaleString('fr-FR') + ' €</div></div>';
+  showToast('✅', 'Estimation calculée', Math.round(estimation).toLocaleString('fr-FR') + ' €');
+}
+
+/* ============================================================
+   PAGE SIGNATURE
+   ============================================================ */
+function pageSignature() {
+  return '<div class="page-head"><div><h1>✒️ Signature électronique</h1><p>Signature légale et sécurisée (eIDAS)</p></div></div>' +
+    '<div class="grid-4">' +
+    '<div class="stat-card"><div class="stat-label">Signatures</div><div class="stat-value">48</div><div class="stat-sub">Ce mois</div></div>' +
+    '<div class="stat-card"><div class="stat-label">En attente</div><div class="stat-value">7</div><div class="stat-sub neg">À relancer</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Temps moyen</div><div class="stat-value">2h24</div><div class="stat-sub">Rapide</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Conformité</div><div class="stat-value">eIDAS</div><div class="stat-sub">Certifié</div></div>' +
+    '</div>' +
+    '<div class="panel"><h2>✍️ Documents à signer</h2>' +
+    '<div class="list-item"><div class="list-icon">⏳</div><div class="list-info"><strong>Mandat M. Petit</strong><small>En attente de signature</small></div>' +
+    '<div class="list-actions"><button onclick="signDocument(\'Mandat M. Petit\')">✍️</button></div></div>' +
+    '<div class="list-item"><div class="list-icon">✅</div><div class="list-info"><strong>Compromis Mme Durand</strong><small>Signé le 08/03</small></div>' +
+    '<span class="tag green">Signé</span></div></div>';
+}
+
+function signDocument(nom) {
+  if (!confirm('Confirmer la signature électronique de : ' + nom + ' ?')) return;
+  showToast('✍️', 'Signature en cours', 'Traitement sécurisé...');
+  setTimeout(function() {
+    showToast('✅', 'Signature réussie', nom + ' signé avec succès');
+  }, 1500);
+}
+
+/* ============================================================
+   PAGE NOTIFICATIONS
+   ============================================================ */
+function pageNotifications() {
+  return '<div class="page-head"><div><h1>🔔 Notifications</h1><p>' + DB.notifications.filter(function(n){return !n.lu;}).length + ' non lue(s)</p></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="markAllRead()">✓ Tout marquer lu</button></div></div>' +
+    '<div class="panel"><h2>📥 Toutes les notifications</h2>' +
+    (DB.notifications.map(function(n) {
+      return '<div class="list-item" style="' + (n.lu?'opacity:.6':'') + '">' +
+        '<div class="list-icon">' + n.icon + '</div>' +
+        '<div class="list-info"><strong>' + n.titre + '</strong><small>' + n.desc + ' · ' + n.date + '</small></div>' +
+        '<span class="tag ' + (n.lu?'green':'red') + '">' + (n.lu?'Lu':'Nouveau') + '</span></div>';
+    }).join('') || '<p style="color:var(--muted)">Aucune notification</p>') + '</div>';
+}
+
+function markAllRead() {
+  DB.notifications.forEach(function(n) { n.lu = true; });
+  saveDB();
+  renderPage(currentPage);
+  showToast('✅', 'Tout marqué', 'Notifications lues');
+}
+
+/* ============================================================
+   PAGE PARAMÈTRES
+   ============================================================ */
+function pageParametres() {
+  return '<div class="page-head"><div><h1>⚙️ Paramètres généraux</h1><p>Configuration de votre compte</p></div></div>' +
+    '<div class="panel"><h2>🏢 Informations entreprise</h2>' +
+    '<div class="form-group"><label>Nom de l\'entreprise</label><input value="ArchImmo Pro"></div>' +
+    '<div class="form-group"><label>Email de contact</label><input value="contact@archimmo.fr"></div>' +
+    '<div class="form-group"><label>Téléphone</label><input value="04 78 12 34 56"></div>' +
+    '<button class="btn btn-primary" onclick="showToast(\'✅\',\'Enregistré\',\'Paramètres sauvegardés\')">💾 Enregistrer</button></div>' +
+    '<div class="panel"><h2>🎬 Gestion des données</h2>' +
+    '<p style="color:var(--muted);font-size:13px;margin-bottom:12px">Chargez la démo pour tester ou videz les données pour repartir de zéro.</p>' +
+    '<button class="btn btn-ghost" onclick="loadDemo()" style="margin-right:8px">🎬 Charger la démo</button>' +
+    '<button class="btn btn-danger" onclick="clearAllData()">🗑️ Tout effacer</button></div>';
+}
+
+/* ============================================================
+   RECHERCHE
+   ============================================================ */
+function handleSearch(val) {
+  searchTerm = val;
+  if (currentPage === 'immo-biens' || currentPage === 'immo-clients' || currentPage === 'arch-projets') {
+    renderPage(currentPage);
+  }
+}
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+function showModal(title, bodyHtml, onConfirm, readOnly) {
+  var overlay = document.getElementById('modalOverlay');
+  var content = document.getElementById('modalContent');
+  var actions = readOnly ?
+    '<button class="btn btn-ghost" onclick="closeModal()">Fermer</button>' :
+    '<button class="btn btn-ghost" onclick="closeModal()">Annuler</button>' +
+    '<button class="btn btn-primary" id="modalConfirmBtn">✅ Confirmer</button>';
+  content.innerHTML = '<h3>' + title + '</h3>' + bodyHtml + '<div class="modal-actions">' + actions + '</div>';
+  overlay.classList.add('show');
+  if (onConfirm && !readOnly) {
+    document.getElementById('modalConfirmBtn').onclick = onConfirm;
+  }
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+document.getElementById('modalOverlay').onclick = function(e) {
+  if (e.target.id === 'modalOverlay') closeModal();
+};
+
+/* ============================================================
+   NOTIFICATIONS & PROFIL
+   ============================================================ */
+function showNotifications() {
+  navigate(currentMode + '-notifications');
+}
+
+function showProfile() {
+  showModal('👤 Profil utilisateur',
+    '<div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">' +
+    '<div><strong>Nom :</strong> Marie Dupont</div>' +
+    '<div><strong>Rôle :</strong> Administratrice</div>' +
+    '<div><strong>Email :</strong> marie@archimmo.fr</div>' +
+    '<div><strong>Agence :</strong> ArchImmo Pro</div></div>',
+    null, true);
+}
 
 /* ============================================================
    TOASTS
@@ -2095,56 +1496,43 @@ function showToast(icon, title, sub) {
     t.style.transform = 'translateX(400px)';
     t.style.transition = 'all .3s';
     setTimeout(function() { t.remove(); }, 300);
-  }, 3500);
+  }, 3200);
 }
 
 /* ============================================================
-   MODAL
+   SWITCHER
    ============================================================ */
-function openCreateModal(title) {
-  var overlay = document.getElementById('modalOverlay');
-  var content = document.getElementById('modalContent');
-  content.innerHTML = '<h3>➕ Créer — ' + title + '</h3>' +
-    '<p>Remplissez les informations ci-dessous pour ajouter un nouvel élément.</p>' +
-    '<div class="form-group"><label>Nom / Titre</label><input placeholder="Ex: Appartement T3 Lyon 6e"></div>' +
-    '<div class="form-group"><label>Catégorie</label><select><option>Vente</option><option>Location</option><option>Projet</option></select></div>' +
-    '<div class="form-group"><label>Description</label><textarea rows="3" placeholder="Détails..."></textarea></div>' +
-    '<div class="form-group"><label>Assigné à</label><select><option>Moi-même</option><option>Jean Martin</option><option>Sophie Dupont</option></select></div>' +
-    '<div class="modal-actions">' +
-    '<button class="btn btn-ghost" onclick="closeModal()">Annuler</button>' +
-    '<button class="btn btn-primary" onclick="confirmCreate(\'' + title + '\')">✅ Créer</button>' +
-    '</div>';
-  overlay.classList.add('show');
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('show');
-}
-
-function confirmCreate(title) {
-  closeModal();
-  showToast('✅', 'Création réussie', title + ' a été ajouté avec succès');
-}
-
-document.getElementById('modalOverlay').onclick = function(e) {
-  if (e.target.id === 'modalOverlay') closeModal();
-};
+document.querySelectorAll('.switch-btn').forEach(function(btn) {
+  btn.onclick = function() {
+    var mode = btn.getAttribute('data-mode');
+    if (mode === currentMode) return;
+    currentMode = mode;
+    document.body.className = mode + '-mode';
+    document.querySelectorAll('.switch-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentPage = mode === 'immo' ? 'immo-dashboard' : 'arch-dashboard';
+    renderMenu();
+    renderPage(currentPage);
+    showToast(mode === 'immo' ? '🏢' : '📐',
+      mode === 'immo' ? 'Espace Immobilier' : 'Espace Architecte',
+      'Basculement effectué');
+  };
+});
 
 /* ============================================================
    INITIALISATION
    ============================================================ */
+loadDB();
 renderMenu();
-renderPage('immo-dashboard', '');
+renderPage('immo-dashboard');
 
 setTimeout(function() {
-  showToast('👋', 'Bienvenue sur ArchImmo Pro', 'Votre suite immobilière & architecturale complète');
-}, 800);
-setTimeout(function() {
-  showToast('📅', '3 rendez-vous aujourd\'hui', 'Premier RDV à 10h00 — Visite Lyon 6e');
-}, 2200);
-setTimeout(function() {
-  showToast('💬', '2 nouveaux messages', 'M. Martin et Cabinet BTP');
-}, 3600);
+  if (DB.biens.length === 0 && DB.clients.length === 0) {
+    showToast('👋', 'Bienvenue sur ArchImmo Pro', 'Cliquez sur 🎬 pour charger la démo');
+  } else {
+    showToast('👋', 'Bon retour', 'Vos données sont sauvegardées');
+  }
+}, 600);
 </script>
 </body>
 </html>
